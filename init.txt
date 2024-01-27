@@ -1,0 +1,61 @@
+CREATE TABLE "account" (
+	"acc"	text,
+	"name"	text NOT NULL,
+	"phone"	text NOT NULL,
+	"package"	int NOT NULL,
+	"username"	text NOT NULL,
+	"password"	text NOT NULL,
+	"install_date"	text,
+	"balance"	decimal(10, 2) DEFAULT 0.00,
+	PRIMARY KEY("acc")
+);
+
+CREATE TABLE "contacts" (
+	"cid"	INTEGER NOT NULL,
+	"account"	TEXT NOT NULL,
+	"contact"	TEXT NOT NULL,
+	PRIMARY KEY("cid")
+);
+
+CREATE TABLE "finances" (
+	"fid"	int,
+	"acc"	text,
+	"money in"	int,
+	"money out"	int,
+	"description"	text,
+	PRIMARY KEY("fid")
+);
+
+
+CREATE TABLE "package" (
+	"pno"	int,
+	"name"	text,
+	"speed"	int NOT NULL,
+	"days"	INTEGER NOT NULL,
+	"max_users"	int,
+	"price"	decimal(8, 2) NOT NULL DEFAULT 00.00,
+	PRIMARY KEY("pno")
+);
+
+CREATE TABLE "payments" (
+	"pid"	INTEGER NOT NULL UNIQUE,
+	"acc"	text,
+	"code"	text UNIQUE,
+	"amount"	int,
+	"source"	text,
+	"date"	text,
+	"time"	text,
+	PRIMARY KEY("pid" AUTOINCREMENT)
+);
+
+CREATE TABLE "sessions" (
+	"sid"	int,
+	"acc"	text,
+	"profile"	text,
+	"start date"	text,
+	"start time"	text,
+	"end date"	text,
+	"end time"	text,
+	"status"	text,
+	PRIMARY KEY("sid")
+);
