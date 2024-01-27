@@ -959,6 +959,8 @@ def main():
     hermes.run()
 
 #################################################################
+print (lg)
+
 current_directory = os.getcwd()  # Get the current working directory
 dir=os.listdir(current_directory)
 if not os.path.join(current_directory, input_fl) in dir:
