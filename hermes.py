@@ -45,7 +45,7 @@ cache_sessions={}
 lg='''
  _                                                         
 | |__   ___ _ __ _ __ ___   ___  ___   ___  ___ _ ____   _(_) ___ ___
-| '_ \ / _ \ '__| '_ ` _ \ / _ \/ __| / __|/ _ \ '__\ \ / / |/ __/ _ \
+| '_ \ / _ \ '__| '_ ` _ \ / _ \/ __| / __|/ _ \ '__\ \ / / |/ __/ _ \\
 | | | |  __/ |  | | | | | |  __/\__ \_\__ \  __/ |   \ V /| | (_|  __/
 |_| |_|\___|_|  |_| |_| |_|\___||___(_)___/\___|_|    \_/ |_|\___\___|
 
@@ -141,10 +141,11 @@ def cache():
         cu.execute("SELECT * FROM finances")
         OUTPT=cu.fetchall()
         for data in OUTPT:
-            cache_finances[data[0]]={"account":data[1],
-                                "money in" :data[2],
-                                "money out" :data[3],
-                                "description" :data[4]
+            cache_finances[data[0]]={"account"  :data[1],
+                                "money in"      :data[2],
+                                "money out"     :data[3],
+                                "date"          :data[4],
+                                "description"   :data[5],
                                 }
         print('#'*10,end='')
 
@@ -152,11 +153,12 @@ def cache():
         cu.execute("SELECT * FROM package")
         OUTPT=cu.fetchall()
         for data in OUTPT:
-            cache_package[data[0]]={"name":data[1],
-                                "speed" :data[2],
-                                "days" :data[3],
+            cache_package[data[0]]={"name"  :data[1],
+                                "speed"     :data[2],
+                                "days"      :data[3],
                                 "max users" :data[4],
-                                "price" :data[5]
+                                "price"     :data[5],
+                                "type"      :data[6]
                                 }
         print('#'*10,end='')
 
@@ -164,12 +166,12 @@ def cache():
         cu.execute("SELECT * FROM payments")
         OUTPT=cu.fetchall()
         for data in OUTPT:
-            cache_payments[data[0]]={"account":data[1],
-                                "code" :data[2],
-                                "amount" :data[3],
-                                "source" :data[4],
-                                "date" :data[5],
-                                "time" :data[6]
+            cache_payments[data[0]]={"account"  :data[1],
+                                "code"          :data[2],
+                                "amount"        :data[3],
+                                "source"        :data[4],
+                                "date"          :data[5],
+                                "time"          :data[6]
                                 }
         print('#'*10,end='')
 
@@ -177,13 +179,14 @@ def cache():
         cu.execute('SELECT * FROM sessions where status = "active"')
         OUTPT=cu.fetchall()
         for data in OUTPT:
-            cache_sessions[data[1]]={"sid":data[0],
-                                "profile" :data[2],
-                                "start date" :data[3],
-                                "start time" :data[4],
-                                "end date" :data[5],
-                                "end time" :data[6],
-                                "status" :data[7]
+            cache_sessions[data[1]]={"sid"      :data[0],
+                                "profile"       :data[2],
+                                "start date"    :data[3],
+                                "start time"    :data[4],
+                                "end date"      :data[5],
+                                "end time"      :data[6],
+                                "status"        :data[7],
+                                "creation date" :data[8]
                                 }
         print(f"{'#'*10}] 100%\033[0m")
         cx.close()
@@ -375,8 +378,8 @@ class hermes:
                         
                         cu.execute('SELECT * FROM finances ORDER BY fid desc limit 1')
                         fid=str(int(cu.fetchone()[0]) + 1)
-                        cu.execute(f'insert into finances values ({str(len(cache_finances))},"{str(sm_acc)}",0.00,{str(cache_package[PKGU])},"{cache_package[PKGU]["name"]} SEBSCRIPTION RENEWAL")')
-                        log(f'insert into finances values ({str(len(cache_finances))},"{str(sm_acc)}",0.00,{str(cache_package[PKGU])},"{cache_package[PKGU]["name"]} SEBSCRIPTION RENEWAL")')
+                        cu.execute(f'insert into finances values ({str(len(cache_finances))},"{str(sm_acc)}",0.00,{str(cache_package[PKGU])},"{str(tme())}","{cache_package[PKGU]["name"]} SEBSCRIPTION RENEWAL")')
+                        log(f'insert into finances values ({str(len(cache_finances))},"{str(sm_acc)}",0.00,{str(cache_package[PKGU])},"{str(tme())}","{cache_package[PKGU]["name"]} SEBSCRIPTION RENEWAL")')
                         BALU=BALU-PKG_PRICEU
                         cu.execute(f'UPDATE account set balance = {str(BALU)} WHERE acc = "{sm_acc}"')
                         log(f'UPDATE account set balance = {str(BALU)} WHERE acc = "{sm_acc}"')
@@ -390,11 +393,14 @@ class hermes:
                         cu.execute('SELECT * FROM sessions ORDER BY sid desc limit 1')
                         log('SELECT * FROM sessions ORDER BY sid desc limit 1')
                         sid=str(int(cu.fetchone()[0]) + 1)
-                        cu.execute(f'INSERT INTO sessions VALUES({sid},"{sm_acc}","{PKG_NAMEU}","{S_DATE}","{S_TIME}","{E_DATE}","{S_TIME}","active")')
-                        log(f'INSERT INTO sessions VALUES({sid},"{sm_acc}","{PKG_NAMEU}","{S_DATE}","{S_TIME}","{E_DATE}","{S_TIME}","active")')  
+                        cu.execute(f'INSERT INTO sessions VALUES({sid},"{sm_acc}","{PKG_NAMEU}","{S_DATE}","{S_TIME}","{E_DATE}","{S_TIME}","active"),"{str(tme())}"')
+                        log(f'INSERT INTO sessions VALUES({sid},"{sm_acc}","{PKG_NAMEU}","{S_DATE}","{S_TIME}","{E_DATE}","{S_TIME}","active"),"{str(tme())}"')  
                         print(GREEN(f'{tme()}New session is created for {account_nme[sm_acc]} with the following values. ({sid},package : "{PKG_NAMEU}",start date : "{S_DATE}",start time : "{S_TIME}",end date : "{E_DATE}", end time : "{S_TIME}","active")'))
 
-                        hermes.ssh_command(f'ip hotspot user set "{account_nme[sm_acc]}" limit-uptime=0')      
+                        if cache_package[cache_account[sm_acc]["package"]]["type"] == 'pppoe':
+                            hermes.ssh_command(f'ppp secret set "{account_nme[sm_acc]}" disabled=no')
+                        elif cache_package[cache_account[sm_acc]["package"]]["type"] == 'hotspot':
+                            hermes.ssh_command(f'ip hotspot user set "{account_nme[sm_acc]}" limit-uptime=0')      
 
                     else:
                         print(f'USER {account_nme[sm_acc]} ACCOUNT BALANCE IS STILL INSUFFICIENT. NO SESSION CREATED') 
@@ -419,7 +425,7 @@ class hermes:
                     log(f'UPDATE sessions SET status = "expired" WHERE acc = "{acc_no}"')
 
                     #(2)CHECK IF THE ACCOUNT HAS ENOUGH TO ACTIVATE THE NEXT SESSION
-                    cu.execute(f'select package,balance FROM account where  acc = "{acc_no}"')
+                    cu.execute(f'SELECT package,balance FROM account where  acc = "{acc_no}"')
                     sdt=cu.fetchall()[0]
                     PKG=sdt[0]
                     BAL=sdt[1]
@@ -434,8 +440,8 @@ class hermes:
                         
                         cu.execute('SELECT * FROM finances ORDER BY fid desc limit 1')
                         fid=str(int(cu.fetchone()[0]) + 1)
-                        cu.execute(f'insert into finances values ({str(fid)},"{str(acc_no)}",0.00,{str(PKG_PRICE)},"SEBSCRIPTION RENEWAL")')
-                        log(f'insert into finances values ({str(fid)},"{str(acc_no)}",0.00,{str(PKG_PRICE)},"SEBSCRIPTION RENEWAL")')
+                        cu.execute(f'insert into finances values ({str(fid)},"{str(acc_no)}",0.00,{str(PKG_PRICE)},"{str(tme())}","SEBSCRIPTION RENEWAL")')
+                        log(f'insert into finances values ({str(fid)},"{str(acc_no)}",0.00,{str(PKG_PRICE)},"{str(tme())}","SEBSCRIPTION RENEWAL")')
                         BAL=BAL-PKG_PRICE
                         cu.execute(f'UPDATE account set balance = {str(BAL)} WHERE acc = "{acc_no}"')
                         log(f'UPDATE account set balance = {str(BAL)} WHERE acc = "{acc_no}"')
@@ -448,23 +454,32 @@ class hermes:
                         cu.execute('SELECT * FROM sessions ORDER BY sid desc limit 1')
                         log('SELECT * FROM sessions ORDER BY sid desc limit 1')
                         sid=str(int(cu.fetchone()[0]) + 1)
-                        cu.execute(f'INSERT INTO sessions VALUES({sid},"{acc_no}","{PKG_NAME}","{S_DATE}","{S_TIME}","{E_DATE}","{S_TIME}","active")')
-                        log(f'INSERT INTO sessions VALUES({sid},"{acc_no}","{PKG_NAME}","{S_DATE}","{S_TIME}","{E_DATE}","{S_TIME}","active")')
+                        cu.execute(f'INSERT INTO sessions VALUES({sid},"{acc_no}","{PKG_NAME}","{S_DATE}","{S_TIME}","{E_DATE}","{S_TIME}","active"),"{str(tme())}"')
+                        log(f'INSERT INTO sessions VALUES({sid},"{acc_no}","{PKG_NAME}","{S_DATE}","{S_TIME}","{E_DATE}","{S_TIME}","active"),"{str(tme())}"')
                         print(GREEN(f'{tme()} NEW SESSION CREATED FOR {account_nme[acc_no]} WITH VALUES ({sid},package : "{PKG_NAME}",start date : "{S_DATE}",start time : "{S_TIME}",end date : "{E_DATE}",end time : "{S_TIME}","active")'))
 
                         #enable user on server
                         cu.execute(f'SELECT username FROM account where acc = "{acc_no}"')
                         un=cu.fetchall()[0][0]
 
-                        hermes.ssh_command(f'ip hotspot user set "{un}" limit-uptime=0')
+                        if cache_package[cache_account[sm_acc]["package"]]["type"] == 'pppoe':
+                            hermes.ssh_command(f'ppp secret set "{account_nme[sm_acc]}" disabled=no')
+                        elif cache_package[cache_account[sm_acc]["package"]]["type"] == 'hotspot':
+                            hermes.ssh_command(f'ip hotspot user set "{account_nme[sm_acc]}" limit-uptime=0')
+
+                        #hermes.ssh_command(f'ip hotspot user set "{un}" limit-uptime=0')
                     
 
                     else:
                         #disable user session
                         print(f'{tme()} USER {account_nme[acc_no]} DISCONTINUED FROM CONNECTION')
 
-                        hermes.ssh_command(f'ip hotspot user set "{account_nme[acc_no]}" limit-uptime=1s')
-                        hermes.ssh_command(f'ip hotspot active remove [find name="{account_nme[acc_no]}"]')
+                        if cache_package[cache_account[sm_acc]["package"]]["type"] == 'pppoe':
+                            hermes.ssh_command(f'ppp secret set "{account_nme[sm_acc]}" disabled=yes')
+                            hermes.ssh_command(f'ppp active remove [find name="{account_nme[sm_acc]}"]')
+                        elif cache_package[cache_account[sm_acc]["package"]]["type"] == 'hotspot':
+                            hermes.ssh_command(f'ip hotspot user set "{account_nme[acc_no]}" limit-uptime=1s')
+                            hermes.ssh_command(f'ip hotspot active remove [find name="{account_nme[acc_no]}"]')
 
             cx.commit()
             cx.close()
@@ -477,7 +492,18 @@ class hermes:
             print(RED(f'FAILED SESSION MONITOR: {str(e)}'))
             log(f'FAILED SESSION MONITOR: {str(e)}')
             return 0
-        
+
+    def add_pkg(name:str,speed:int,days:int,users:str,price:int,p_type):
+        try:
+            
+            cx = sqlite3.connect(database)
+            cu = cx.cursor()
+            pno=len(cache_package.keys())+1
+            cu.execute(f'INSERT INTO package VALUES({pno},"{name}",{speed},{days},{users},{price},"{p_type}")')
+
+        except Exception as e:
+            print(RED(f'Package add error: [{str(e)}]'))   
+
     def add_user():
         try:
             print(MENU('ADDING USER: '))
@@ -501,6 +527,7 @@ class hermes:
                 phne=input(MENU("Input their phone number: "))
                 usernm=input(MENU("Input username: "))
                 pswrd=input(MENU("Input password: "))
+                
 
                 inst_date=input(MENU(f"Input installation date: [{def_date}]"))
                 if inst_date == '':
@@ -534,7 +561,13 @@ class hermes:
             cu.execute('SELECT * FROM contacts ORDER BY cid desc limit 1')
             cid=str(int(cu.fetchone()[0]) + 1)
             cu.execute(f'INSERT INTO contacts values({cid},"{acc}","{phne}")')
-            hermes.ssh_command(f'ip hotspot user add comment="{name}" name="{usernm}" password="{pswrd}" profile="{mikrotik_profs[int(pkg)]}"  server=hs-new_wingu limit-uptime=5m ')
+
+            pkg_type=cache_package[cache_account[acc]["package"]]['type']
+            if pkg_type == 'hotspot':
+                hermes.ssh_command(f'ip hotspot user add comment="{name}" name="{usernm}" password="{pswrd}" profile="{mikrotik_profs[int(pkg)]}"  server=hs-new_wingu limit-uptime=5m ')
+            elif pkg_type == 'pppoe':
+                hermes.ssh_command(f'ppp secret add comment="{name}" name="{usernm}" password="{pswrd}" profile="{mikrotik_profs[int(pkg)]}"  service=ppppoe ')
+
             cx.commit()
             cx.close()
             return 1
@@ -847,7 +880,7 @@ class hermes:
                 with open(input_fl,'w')as init:
                     init.write('>>>>FILL IN THE FILLOWING DATA<<<<\n')
                     init.write('+'+'-'*48+'+\n')
-                    init.write("| DATABASE NAME         |     DATABASE           |\n")
+                    init.write("| DATABASE NAME         |     DATABASE.db        |\n")
                     init.write('+'+'-'*48+'+\n')
                     init.write("| LOG FILE NAME         |    log_test.txt        |\n")
                     init.write('+'+'-'*48+'+\n')
@@ -898,8 +931,59 @@ class hermes:
                 cx.close()
                 print(GREEN('DONE'))
             
+            database = os.path.join(current_directory, database_name) 
+            log_file= os.path.join(current_directory, log_file_name)
+            
+            while 1:#add package
+                print(MENU("Lets create first package. "))
+                name=input(MENU('Input package name: '))
+                speed_sel = input(MENU('Input speed: [int] '))
+                try:
+                    speed=int(speed_sel)
+                except:
+                    print(RED("invalid speed"))
+                    continue
+
+                days_sel=input(MENU('Input number of days per subscription: [int] '))
+                try:
+                    days=int(days_sel)
+                except:
+                    print(RED("invalid days"))
+                    continue
+                users_sel=input(MENU('Input maximum users per connection[HOTSPOT ONLY]: '))
+                try:
+                    users=int(users_sel)
+                except:
+                    print(RED("invalid users"))
+                    continue
+                price=input(MENU('Input price per subscription: [int] '))
+
+                p_type=input(MENU('Select package type [HOTSPOT/PPPOE]: '))
+
+                if p_type.strip().capitalize().split()=='P':
+                    p_type='pppoe'
+                else:
+                    p_type='hotspot'
+
+                cnf=input(RED(f'CONFIRM THE PRVIDED DATA: \n    PACKAGE NAME: {name}\n  PACKAGE SPEED: {speed}\n    PACKAGE DAYS: {days}\n  MAX USERS: {users}\n    PRICE: {price}\n   PACKAGE: {p_type}\n\n>>>[Y/N] '))
+                
+                if cnf.strip().capitalize()=='Y':
+                    if not hermes.add_pkg(name,speed,days,users,price,p_type) == 1:
+                        print(RED('FAILED TO ADD PACKAGE'))
+                    else:
+                        break
+                
+                cnf=input('RETRY? [Y/N] ')
+                if cnf.strip().capitalize()=='N':
+                    print(RED('Failed package add. EXITING...'))
+                    sys.exit()
+
+            
+
+
             print('INITIALISATION COMPLETED')
             return 1
+        
         
         except Exception as e:
             print('FAIL INITIALISING WINGU ' + str(e))
@@ -959,6 +1043,9 @@ def main():
     hermes.run()
 
 #################################################################
+clear_terminal()
+
+
 print (lg)
 
 current_directory = os.getcwd()  # Get the current working directory

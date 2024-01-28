@@ -1,5 +1,5 @@
 CREATE TABLE "account" (
-	"acc"	text,
+	"acc"	text NOT NULL,
 	"name"	text NOT NULL,
 	"phone"	text NOT NULL,
 	"package"	int NOT NULL,
@@ -18,29 +18,30 @@ CREATE TABLE "contacts" (
 );
 
 CREATE TABLE "finances" (
-	"fid"	int,
-	"acc"	text,
+	"fid"	int NOT NULL,
+	"acc"	text NOT NULL,
 	"money in"	int,
 	"money out"	int,
+	"date"	TEXT,
 	"description"	text,
 	PRIMARY KEY("fid")
 );
 
-
 CREATE TABLE "package" (
-	"pno"	int,
+	"pno"	int NOT NULL,
 	"name"	text,
 	"speed"	int NOT NULL,
 	"days"	INTEGER NOT NULL,
 	"max_users"	int,
 	"price"	decimal(8, 2) NOT NULL DEFAULT 00.00,
+	"type"	TEXT NOT NULL,
 	PRIMARY KEY("pno")
 );
 
 CREATE TABLE "payments" (
 	"pid"	INTEGER NOT NULL UNIQUE,
-	"acc"	text,
-	"code"	text UNIQUE,
+	"acc"	text NOT NULL,
+	"code"	text NOT NULL UNIQUE,
 	"amount"	int,
 	"source"	text,
 	"date"	text,
@@ -49,13 +50,14 @@ CREATE TABLE "payments" (
 );
 
 CREATE TABLE "sessions" (
-	"sid"	int,
-	"acc"	text,
+	"sid"	int NOT NULL,
+	"acc"	text NOT NULL,
 	"profile"	text,
 	"start date"	text,
 	"start time"	text,
 	"end date"	text,
 	"end time"	text,
-	"status"	text,
+	"status"	text NOT NULL,
+	"creation date"	TEXT NOT NULL,
 	PRIMARY KEY("sid")
 );
