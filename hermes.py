@@ -328,8 +328,8 @@ class hermes:
             print('adding to finance')
             cu.execute(f'SELECT fid FROM finances')
             fid=str(int(cu.fetchall()[-1][0])+1)
-            cu.execute(f'insert into finances values ({fid},"{acc}",{amount},0.00,"DEPOSIT")')
-            log(f'insert into finances values ({fid},"{acc}",{amount},0.00,"DEPOSIT")')
+            cu.execute(f'insert into finances values ({fid},"{acc}",{amount},0.00,"DEPOSIT","{str(tme())}")')
+            log(f'insert into finances values ({fid},"{acc}",{amount},0.00,"DEPOSIT","{str(tme())}")')
 
             #ADD MONEY TO USER ACCOUNT
             print('Adding money to user account')
@@ -378,8 +378,8 @@ class hermes:
                         
                         cu.execute('SELECT * FROM finances ORDER BY fid desc limit 1')
                         fid=str(int(cu.fetchone()[0]) + 1)
-                        cu.execute(f'insert into finances values ({str(len(cache_finances))},"{str(sm_acc)}",0.00,{str(cache_package[PKGU])},"{str(tme())}","{cache_package[PKGU]["name"]} SEBSCRIPTION RENEWAL")')
-                        log(f'insert into finances values ({str(len(cache_finances))},"{str(sm_acc)}",0.00,{str(cache_package[PKGU])},"{str(tme())}","{cache_package[PKGU]["name"]} SEBSCRIPTION RENEWAL")')
+                        cu.execute(f'insert into finances values ({str(len(cache_finances))},"{str(sm_acc)}",0.00,{str(cache_package[PKGU])},"{str(tme())}","{cache_package[PKGU]["name"]} SEBSCRIPTION RENEWAL","{str(tme())}")')
+                        log(f'insert into finances values ({str(len(cache_finances))},"{str(sm_acc)}",0.00,{str(cache_package[PKGU])},"{str(tme())}","{cache_package[PKGU]["name"]} SEBSCRIPTION RENEWAL","{str(tme())}")')
                         BALU=BALU-PKG_PRICEU
                         cu.execute(f'UPDATE account set balance = {str(BALU)} WHERE acc = "{sm_acc}"')
                         log(f'UPDATE account set balance = {str(BALU)} WHERE acc = "{sm_acc}"')
@@ -393,8 +393,8 @@ class hermes:
                         cu.execute('SELECT * FROM sessions ORDER BY sid desc limit 1')
                         log('SELECT * FROM sessions ORDER BY sid desc limit 1')
                         sid=str(int(cu.fetchone()[0]) + 1)
-                        cu.execute(f'INSERT INTO sessions VALUES({sid},"{sm_acc}","{PKG_NAMEU}","{S_DATE}","{S_TIME}","{E_DATE}","{S_TIME}","active"),"{str(tme())}"')
-                        log(f'INSERT INTO sessions VALUES({sid},"{sm_acc}","{PKG_NAMEU}","{S_DATE}","{S_TIME}","{E_DATE}","{S_TIME}","active"),"{str(tme())}"')  
+                        cu.execute(f'INSERT INTO sessions VALUES({sid},"{sm_acc}","{PKG_NAMEU}","{S_DATE}","{S_TIME}","{E_DATE}","{S_TIME}","active","{str(tme())}")')
+                        log(f'INSERT INTO sessions VALUES({sid},"{sm_acc}","{PKG_NAMEU}","{S_DATE}","{S_TIME}","{E_DATE}","{S_TIME}","active","{str(tme())}")')  
                         print(GREEN(f'{tme()}New session is created for {account_nme[sm_acc]} with the following values. ({sid},package : "{PKG_NAMEU}",start date : "{S_DATE}",start time : "{S_TIME}",end date : "{E_DATE}", end time : "{S_TIME}","active")'))
 
                         if cache_package[cache_account[sm_acc]["package"]]["type"] == 'pppoe':
@@ -440,8 +440,8 @@ class hermes:
                         
                         cu.execute('SELECT * FROM finances ORDER BY fid desc limit 1')
                         fid=str(int(cu.fetchone()[0]) + 1)
-                        cu.execute(f'insert into finances values ({str(fid)},"{str(acc_no)}",0.00,{str(PKG_PRICE)},"{str(tme())}","SEBSCRIPTION RENEWAL")')
-                        log(f'insert into finances values ({str(fid)},"{str(acc_no)}",0.00,{str(PKG_PRICE)},"{str(tme())}","SEBSCRIPTION RENEWAL")')
+                        cu.execute(f'insert into finances values ({str(fid)},"{str(acc_no)}",0.00,{str(PKG_PRICE)},"{str(tme())}","SEBSCRIPTION RENEWAL","{str(tme())}")')
+                        log(f'insert into finances values ({str(fid)},"{str(acc_no)}",0.00,{str(PKG_PRICE)},"{str(tme())}","SEBSCRIPTION RENEWAL","{str(tme())}")')
                         BAL=BAL-PKG_PRICE
                         cu.execute(f'UPDATE account set balance = {str(BAL)} WHERE acc = "{acc_no}"')
                         log(f'UPDATE account set balance = {str(BAL)} WHERE acc = "{acc_no}"')
@@ -454,9 +454,9 @@ class hermes:
                         cu.execute('SELECT * FROM sessions ORDER BY sid desc limit 1')
                         log('SELECT * FROM sessions ORDER BY sid desc limit 1')
                         sid=str(int(cu.fetchone()[0]) + 1)
-                        cu.execute(f'INSERT INTO sessions VALUES({sid},"{acc_no}","{PKG_NAME}","{S_DATE}","{S_TIME}","{E_DATE}","{S_TIME}","active"),"{str(tme())}"')
-                        log(f'INSERT INTO sessions VALUES({sid},"{acc_no}","{PKG_NAME}","{S_DATE}","{S_TIME}","{E_DATE}","{S_TIME}","active"),"{str(tme())}"')
-                        print(GREEN(f'{tme()} NEW SESSION CREATED FOR {account_nme[acc_no]} WITH VALUES ({sid},package : "{PKG_NAME}",start date : "{S_DATE}",start time : "{S_TIME}",end date : "{E_DATE}",end time : "{S_TIME}","active")'))
+                        cu.execute(f'INSERT INTO sessions VALUES({sid},"{acc_no}","{PKG_NAME}","{S_DATE}","{S_TIME}","{E_DATE}","{S_TIME}","active","{str(tme())}")')
+                        log(f'INSERT INTO sessions VALUES({sid},"{acc_no}","{PKG_NAME}","{S_DATE}","{S_TIME}","{E_DATE}","{S_TIME}","active","{str(tme())}")')
+                        print(GREEN(f'{tme()} NEW SESSION CREATED FOR {account_nme[acc_no]} WITH VALUES ({sid},package : "{PKG_NAME}",start date : "{S_DATE}",start time : "{S_TIME}",end date : "{E_DATE}",end time : "{S_TIME}","active","{str(tme())}")'))
 
                         #enable user on server
                         cu.execute(f'SELECT username FROM account where acc = "{acc_no}"')
@@ -699,7 +699,7 @@ class hermes:
             cu.execute('SELECT * FROM finances ORDER BY fid desc limit 1')
             fid=str(int(cu.fetchone()[0]) + 1)
 
-            cu.execute(f'INSERT INTO finances VALUES({fid},"{str(usrs[i])}",{str(comp_amnt)},0,"{descr}")')
+            cu.execute(f'INSERT INTO finances VALUES({fid},"{str(usrs[i])}",{str(comp_amnt)},0,"{descr}","{str(tme())}")')
             cu.execute(f'SELECT balance FROM account WHERE acc = "{usrs[i]}"')
             bl=cu.fetchall()[0][0]
 
