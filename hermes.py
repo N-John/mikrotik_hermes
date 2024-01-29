@@ -237,12 +237,13 @@ class hermes:
             print(f'Running command [{cmd}]')
             stdin, stdout, stderr = ssh_client.exec_command(cmd)
             output = stdout.read().decode('utf-8')
+            print(MENU(output))
             ssh_client.close()
             return str(output)
 
         except paramiko.AuthenticationException:
             print(RED(f"{tme()}Authentication failed, please check your credentials."))
-            log('ERROR CONNECTING TO SSH SERVER: AUUTHENTICATION FAIL')
+            log('ERROR CONNECTING TO SSH SERVER: AUTHENTICATION FAIL')
             return f"Authentication failed, please check your credentials: {ssh_err}"
         
         except paramiko.SSHException as ssh_err:
@@ -367,7 +368,7 @@ class hermes:
                    
                     PKGU=cache_account[sm_acc]["package"]
                     BALU=cache_account[sm_acc]["balance"]
-                    PKG_PRICEU=cache_package[PKGU]#PRICE OF THE PACKAGE
+                    PKG_PRICEU=cache_package[PKGU]["price"]#PRICE OF THE PACKAGE
                     PKG_NAMEU=cache_package[PKGU]["name"]#NAME OF THE PACKAGE
                     days_to_addU=cache_package[PKGU]["days"]#HOW MANY DAYS THE PACKAGE COVERS
                     #print(f"PACKAGE = {PKG_NAMEU}")
@@ -378,8 +379,8 @@ class hermes:
                         
                         cu.execute('SELECT * FROM finances ORDER BY fid desc limit 1')
                         fid=str(int(cu.fetchone()[0]) + 1)
-                        cu.execute(f'insert into finances values ({str(len(cache_finances))},"{str(sm_acc)}",0.00,{str(cache_package[PKGU])},"{str(tme())}","{cache_package[PKGU]["name"]} SEBSCRIPTION RENEWAL","{str(tme())}")')
-                        log(f'insert into finances values ({str(len(cache_finances))},"{str(sm_acc)}",0.00,{str(cache_package[PKGU])},"{str(tme())}","{cache_package[PKGU]["name"]} SEBSCRIPTION RENEWAL","{str(tme())}")')
+                        cu.execute(f'insert into finances values ({str(len(cache_finances))},"{str(sm_acc)}",0.00,{str(cache_package[PKGU]["price"])},"{cache_package[PKGU]["name"]} SEBSCRIPTION RENEWAL","{str(tme())}")')
+                        log(f'insert into finances values ({str(len(cache_finances))},"{str(sm_acc)}",0.00,{str(cache_package[PKGU]["price"])},"{cache_package[PKGU]["name"]} SEBSCRIPTION RENEWAL","{str(tme())}")')
                         BALU=BALU-PKG_PRICEU
                         cu.execute(f'UPDATE account set balance = {str(BALU)} WHERE acc = "{sm_acc}"')
                         log(f'UPDATE account set balance = {str(BALU)} WHERE acc = "{sm_acc}"')
@@ -440,8 +441,8 @@ class hermes:
                         
                         cu.execute('SELECT * FROM finances ORDER BY fid desc limit 1')
                         fid=str(int(cu.fetchone()[0]) + 1)
-                        cu.execute(f'insert into finances values ({str(fid)},"{str(acc_no)}",0.00,{str(PKG_PRICE)},"{str(tme())}","SEBSCRIPTION RENEWAL","{str(tme())}")')
-                        log(f'insert into finances values ({str(fid)},"{str(acc_no)}",0.00,{str(PKG_PRICE)},"{str(tme())}","SEBSCRIPTION RENEWAL","{str(tme())}")')
+                        cu.execute(f'insert into finances values ({str(fid)},"{str(acc_no)}",0.00,{str(PKG_PRICE)},"SEBSCRIPTION RENEWAL","{str(tme())}")')
+                        log(f'insert into finances values ({str(fid)},"{str(acc_no)}",0.00,{str(PKG_PRICE)},"SEBSCRIPTION RENEWAL","{str(tme())}")')
                         BAL=BAL-PKG_PRICE
                         cu.execute(f'UPDATE account set balance = {str(BAL)} WHERE acc = "{acc_no}"')
                         log(f'UPDATE account set balance = {str(BAL)} WHERE acc = "{acc_no}"')
@@ -647,11 +648,11 @@ class hermes:
                     cnf_e=input(f'DO YOU WANT TO EXIT? [Y/N]')
                     if cnf_e.strip().capitalize() == 'Y':
                         return 0
-            
+            log(f'session edited with the following data: :\n  start date : {sd}\n start time = {st}\n end date = {ed}\n end time = {et}\n Profile = {SESS[acno]["desc"]+"[edited]"}\n')
             cu.execute(f'UPDATE sessions set "start date" = "{sd}" WHERE sid = {SESS[acno]["sid"]}')
             cu.execute(f'UPDATE sessions set "end date" = "{ed}" WHERE sid = {SESS[acno]["sid"]}')
             cu.execute(f'UPDATE sessions set "start time" = "{st}" WHERE sid = {SESS[acno]["sid"]}')
-            cu.execute(f'UPDATE sessions set "end date" = "{ed}" WHERE sid = {SESS[acno]["sid"]}')
+            cu.execute(f'UPDATE sessions set "end time" = "{et}" WHERE sid = {SESS[acno]["sid"]}')
             cu.execute(f'UPDATE sessions set "profile" = "{SESS[acno]["desc"]+"[edited]"}" WHERE sid = {SESS[acno]["sid"]}')
 
             cx.commit()
@@ -761,6 +762,7 @@ class hermes:
             #3. MIKROTIK ACTIVE CHECKER
 
             #ssh_otp=hermes.ssh_command('ip hotspot user print detail').strip().split(';;;')
+
             onl_lst=[]
             otp=hermes.dbcommunication('select username,acc from account')
             for c in otp:
@@ -992,7 +994,7 @@ class hermes:
 
                    
 def main():
-    menu_list=['ADD USER','COMPENSATION','USER PAYMENT MANAGEMENT','SESSION EDIT','SWITCH TO AUTO_MONITOR','STATUS','MANUAL CLI','EXIT']
+    menu_list=['ADD USER','COMPENSATION','ADD USER PAYMENT','SESSION EDIT','SWITCH TO AUTO_MONITOR','STATUS','MANUAL CLI','EXIT']
     a=str(menu(menu_list))
     if a=='1':#add user
         print(GREEN('SWITCHING TO ADD USER'))
@@ -1006,13 +1008,13 @@ def main():
         print("RUNNING PAYMENT MANAGER SERVICE...\n\n")
         while 1:
             code=input('INPUT TRANSACTION CODE: ')
-            ammount=input('INPUT AMMOUNT: ')
+            ammount=input('INPUT AMOUNT: ')
             source=input('INPUT SOURCE: ')
             date=input(f'INPUT DATE [{def_date}] : ')
             if date == '':
                 date= str(def_date)
             timet=input('INPUT TIME[hh:mm PM/AM]: ')
-            conf=input(MENU(f'\nCODE: {code},\n  AMMOUNT: {ammount},\n  SOURCE : {source},\n   DATE : {date},\n    TIME: {timet}\n ')+' CONFIRM DATA Y/N: ')
+            conf=input(MENU(f'\nCODE: {code},\n  AMOUNT: {ammount},\n  SOURCE : {source},\n   DATE : {date},\n    TIME: {timet}\n ')+' CONFIRM DATA Y/N: ')
             
             if conf.strip().capitalize()=='Y':
                 hermes.payments(code,ammount,source,date,timet)
@@ -1023,7 +1025,7 @@ def main():
                     break
 
     elif a=='4':
-        print(RED(f'RUNNING SESSION EDIT...'))
+        print(GREEN(f'RUNNING SESSION EDIT...'))
         hermes.session_edit()
     elif a=='5':
         print(GREEN('SWITCHING BACK TO AUTO'))
