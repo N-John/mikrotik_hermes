@@ -763,7 +763,7 @@ class hermes:
 
             #ssh_otp=hermes.ssh_command('ip hotspot user print detail').strip().split(';;;')
 
-            onl_lst=[]
+            '''onl_lst=[]
             otp=hermes.dbcommunication('select username,acc from account')
             for c in otp:
                 ssh_otp=hermes.ssh_command(f'ip hotspot user print detail where name="{c[0]}"')
@@ -781,7 +781,7 @@ class hermes:
                      print(RED(f'User {account_nme[a]} is not disabled yet has no active session'))
             #with open('test.txt','w') as f:
             #     f.write(ssh_otp)
-            print('\n\n')
+            print('\n\n')'''
 
             return 1
                     
