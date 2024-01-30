@@ -475,11 +475,11 @@ class hermes:
                     else:
                         #disable user session
                         print(f'{tme()} USER {account_nme[acc_no]} DISCONTINUED FROM CONNECTION')
-                        un=cache[acc_no]["username"]
-                        if cache_package[cache_account[sm_acc]["package"]]["type"] == 'pppoe':
+                        un=cache_account[acc_no]["username"]
+                        if cache_package[cache_account[acc_no]["package"]]["type"] == 'pppoe':
                             hermes.ssh_command(f'ppp secret set "{un}" disabled=yes')
                             hermes.ssh_command(f'ppp active remove [find name="{un}"]')
-                        elif cache_package[cache_account[sm_acc]["package"]]["type"] == 'hotspot':
+                        elif cache_package[cache_account[acc_no]["package"]]["type"] == 'hotspot':
                             hermes.ssh_command(f'ip hotspot user set "{un}" limit-uptime=1s')
                             hermes.ssh_command(f'ip hotspot active remove [find name="{un}"]')
 
