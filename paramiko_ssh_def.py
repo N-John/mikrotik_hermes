@@ -45,4 +45,4 @@ def ssh_command(cmd):
         #log(f"SSH ERROR OCCURED: {e}")
         return f"An error occurred: {e}"
     
-print (ssh_command())
+print (ssh_command(""))
