@@ -61,3 +61,17 @@ CREATE TABLE "sessions" (
 	"creation date"	TEXT NOT NULL,
 	PRIMARY KEY("sid")
 );
+
+CREATE TABLE "pppoe_account" (
+	"acc"	TEXT NOT NULL UNIQUE,
+	"name"	TEXT NOT NULL,
+	"phone"	TEXT NOT NULL,
+	"location"	TEXT NOT NULL,
+	"ip"	TEXT,
+	"username"	TEXT NOT NULL,
+	"password"	TEXT NOT NULL,
+	"install date"	TEXT,
+	"package"	INTEGER NOT NULL,
+	"balance"	INTEGER NOT NULL,
+	PRIMARY KEY("acc")
+);

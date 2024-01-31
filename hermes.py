@@ -41,6 +41,7 @@ cache_finances={}
 cache_package={}
 cache_payments={}
 cache_sessions={}
+cache_pppoe={}
 
 lg='''
  _                                                         
@@ -101,6 +102,7 @@ def cache():
         global cache_package
         global cache_payments
         global cache_sessions
+        global cache_pppoe
 
         cache_account={}
         cache_contacts={}
@@ -108,6 +110,7 @@ def cache():
         cache_package={}
         cache_payments={}
         cache_sessions={}
+        cache_pppoe={}
 
         print('#'*10,end='')
 
@@ -188,6 +191,22 @@ def cache():
                                 "status"        :data[7],
                                 "creation date" :data[8]
                                 }
+        print('#'*10,end='')
+        #pppoe acccount cache
+        cu.execute('SELECT * FROM pppoe_account')
+        OUTPT=cu.fetchall()
+        for data in OUTPT:
+            cache_pppoe[data[0]]={"name"      :data[1],
+                                "phone"       :data[2],
+                                "location"    :data[3],
+                                "ip"    :data[4],
+                                "username"      :data[5],
+                                "password"      :data[6],
+                                "package"        :data[8],
+                                "creation date" :data[7],
+                                "balance"        :data[9]
+                                }
+        
         print(f"{'#'*10}] 100%\033[0m")
         cx.close()
 
