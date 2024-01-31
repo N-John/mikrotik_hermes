@@ -227,20 +227,27 @@ def menu(menus:list):#A MODIFICATION OF https://github.com/N-John/mmenu.git
 
 
 class hermes:
-    def ssh_command(cmd):
+    def ssh_command(cmds:list):
         # Establish SSH connection to the MikroTik router
         try:
+
+            output=[]
+            if len(cmd)<1:
+                return 0
             ssh_client = paramiko.SSHClient()
             ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             ssh_client.connect(hostname=mk_ip, username=mk_username, password=mk_password)
             print(GREEN(f"{tme()}CONNECTED TO SERVER VIA SSH"))
-            print(f'Running command [{cmd}]')
-            stdin, stdout, stderr = ssh_client.exec_command(f'log warning "auto running command {cmd}"')
-            stdin, stdout, stderr = ssh_client.exec_command(cmd)
-            output = stdout.read().decode('utf-8')
+            
+            for cmd in cmds:
+
+                print(f'Running command [{cmd}]')
+                stdin, stdout, stderr = ssh_client.exec_command(f'log warning "auto running command {cmd}"')
+                stdin, stdout, stderr = ssh_client.exec_command(cmd)
+                output.append(stdout.read().decode('utf-8'))
             print(MENU(output))
             ssh_client.close()
-            return str(output)
+            return output
 
         except paramiko.AuthenticationException:
             print(RED(f"{tme()}Authentication failed, please check your credentials."))
@@ -399,10 +406,12 @@ class hermes:
 
                         if cache_package[cache_account[sm_acc]["package"]]["type"] == 'pppoe':
                             print(MENU(f'CREATING NEW REMOTE PPPoE SESSION FOR {account_nme[sm_acc]}'))
-                            hermes.ssh_command(f'ppp secret set "{cache_account[sm_acc]["username"]}" disabled=no')
+                            cmd=[f'ppp secret set "{cache_account[sm_acc]["username"]}" disabled=no']
+                            hermes.ssh_command(cmd)
                         elif cache_package[cache_account[sm_acc]["package"]]["type"] == 'hotspot':
                             print(MENU(f'CREATING NEW REMOTE HOTSPOT SESSION FOR {account_nme[sm_acc]}'))
-                            hermes.ssh_command(f'ip hotspot user set "{cache_account[sm_acc]["username"]}" limit-uptime=0')      
+                            cmd=[f'ip hotspot user set "{cache_account[sm_acc]["username"]}" limit-uptime=0']
+                            hermes.ssh_command(cmd)      
 
                     else:
                         print(f'USER {account_nme[sm_acc]} ACCOUNT BALANCE IS STILL INSUFFICIENT. NO SESSION CREATED') 
@@ -466,10 +475,12 @@ class hermes:
 
                         if cache_package[cache_account[sm_acc]["package"]]["type"] == 'pppoe':
                             print(MENU(f'CREATING NEW REMOTE PPPoE SESSION FOR {account_nme[acc_no]}'))
-                            hermes.ssh_command(f'ppp secret set "{cache_account[acc_no]["username"]}" disabled=no')
+                            cmd=[f'ppp secret set "{cache_account[acc_no]["username"]}" disabled=no']
+                            hermes.ssh_command(cmd)
                         elif cache_package[cache_account[sm_acc]["package"]]["type"] == 'hotspot':
                             print(MENU(f'CREATING NEW REMOTE HOTSPOT SESSION FOR {account_nme[acc_no]}'))
-                            hermes.ssh_command(f'ip hotspot user set "{cache_account[acc_no]["username"]}" limit-uptime=0')
+                            cmd=[f'ip hotspot user set "{cache_account[acc_no]["username"]}" limit-uptime=0']
+                            hermes.ssh_command(cmd)
                    
 
                     else:
@@ -477,11 +488,12 @@ class hermes:
                         print(f'{tme()} USER {account_nme[acc_no]} DISCONTINUED FROM CONNECTION')
                         un=cache_account[acc_no]["username"]
                         if cache_package[cache_account[acc_no]["package"]]["type"] == 'pppoe':
-                            hermes.ssh_command(f'ppp secret set "{un}" disabled=yes')
-                            hermes.ssh_command(f'ppp active remove [find name="{un}"]')
+                            cmd=[f'ppp secret set "{un}" disabled=yes',f'ppp active remove [find name="{un}"]']
+                            hermes.ssh_command(cmd)
                         elif cache_package[cache_account[acc_no]["package"]]["type"] == 'hotspot':
-                            hermes.ssh_command(f'ip hotspot user set "{un}" limit-uptime=1s')
-                            hermes.ssh_command(f'ip hotspot active remove [find name="{un}"]')
+                            cmd=[f'ip hotspot user set "{un}" limit-uptime=1s',f'ip hotspot active remove [find name="{un}"]']
+                            hermes.ssh_command(cmd)
+                            
 
             cx.commit()
             cx.close()
@@ -563,12 +575,15 @@ class hermes:
             cid=str(int(cu.fetchone()[0]) + 1)
             
             cu.execute(f'INSERT INTO contacts values({cid},"{acc}","{phne}")')
+            cmd=[]
             
             if pkg_type == 'hotspot':
+                cmd.append(f'ip hotspot user add comment="{name}" name="{usernm}" password="{pswrd}" profile="{mikrotik_profs[int(pkg)]}"  server=hs-new_wingu limit-uptime=5m ')
                 
-                hermes.ssh_command(f'ip hotspot user add comment="{name}" name="{usernm}" password="{pswrd}" profile="{mikrotik_profs[int(pkg)]}"  server=hs-new_wingu limit-uptime=5m ')
             elif pkg_type == 'pppoe':
-                hermes.ssh_command(f'ppp secret add comment="{name}" name="{usernm}" password="{pswrd}" profile="{mikrotik_profs[int(pkg)]}"  service=ppppoe ')
+                cmd.append(f'ppp secret add comment="{name}" name="{usernm}" password="{pswrd}" profile="{mikrotik_profs[int(pkg)]}"  service=ppppoe ')
+                
+            hermes.ssh_command(cmd)
 
             cx.commit()
             cx.close()
@@ -659,6 +674,7 @@ class hermes:
 
             cx.commit()
             cx.close()
+            return 1
             
         except Exception as e:
             print(RED('UNABLE TO GET USER SESSION EDIT: '+str(e)))
@@ -709,6 +725,8 @@ class hermes:
             
         except Exception as e:
             print(RED(f'ERROR RUNNING COMPENSATIONS: [{str(e)}]'))
+            log(RED(f'ERROR RUNNING COMPENSATIONS: [{str(e)}]'))
+            return 0
 
     def startup():#what to do when the program first runs
         try:
@@ -756,25 +774,24 @@ class hermes:
 
             #ssh_otp=hermes.ssh_command('ip hotspot user print detail').strip().split(';;;')
 
-            '''onl_lst=[]
+            onl_lst=[]
             otp=hermes.dbcommunication('select username,acc from account')
+            cmd=[]
             for c in otp:
-                ssh_otp=hermes.ssh_command(f'ip hotspot user print detail where name="{c[0]}"')
-                if not 'limit-uptime' in ssh_otp:
-                    onl_lst.append(c[1])
-                    #print(ssh_otp)
-                    #print('*'*50)
-                    #with open ('test.txt','a') as e:
-                   #      e.write(c[0]+ssh_otp+'\n'+'*'*50)
+                ssh_otp_list=cmd.append(f'ip hotspot user print detail where name="{c[0]}"')
+
+            for ot in ssh_otp_list:
+                if not 'limit-uptime' in ot:
+                        onl_lst.append(c[1])
+                
 
             #print(onl_lst)
             print('\n\n')
             for a in onl_lst:
                 if not a in cache_sessions.keys():
                      print(RED(f'User {account_nme[a]} is not disabled yet has no active session'))
-            #with open('test.txt','w') as f:
-            #     f.write(ssh_otp)
-            print('\n\n')'''
+        
+            print('\n\n')
 
             return 1
                     
