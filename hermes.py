@@ -805,14 +805,12 @@ class hermes:
                 try: 
                     if not 'limit-uptime' in ot: #find connected users
                         if not cache_sessions[otp[c][2]]["status"]== 'active':
-                            
+
                                 print(f'{RED("User")} {MENU(otp[c][1])} {RED("is connected yet has no active session")}')
                 except Exception as e:
-                    print(RED(f'ERROR CONFITMING FOR {MENU(otp[c][1])}'))
+                    print(RED(f'ERROR CONFIRMING SESSION STATUS FOR {MENU(otp[c][1])}'))
 
                 c=c+1
-                                    
-        
             print('\n\n')
 
             return 1
