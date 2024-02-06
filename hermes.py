@@ -254,7 +254,7 @@ class hermes:
         try:
 
             output=[]
-            if len(cmd)<1:
+            if len(cmds)<1:
                 return 0
             ssh_client = paramiko.SSHClient()
             ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -267,7 +267,7 @@ class hermes:
                 stdin, stdout, stderr = ssh_client.exec_command(f'log warning "auto running command {cmd}"')
                 stdin, stdout, stderr = ssh_client.exec_command(cmd)
                 output.append(stdout.read().decode('utf-8'))
-            print(MENU(output))
+            #print(MENU(output))
             ssh_client.close()
             return output
 
@@ -495,11 +495,11 @@ class hermes:
                         cu.execute(f'SELECT username FROM account where acc = "{acc_no}"')
                         un=cu.fetchall()[0][0]
 
-                        if cache_package[cache_account[sm_acc]["package"]]["type"] == 'pppoe':
+                        if cache_package[cache_account[acc_no]["package"]]["type"] == 'pppoe':
                             print(MENU(f'CREATING NEW REMOTE PPPoE SESSION FOR {account_nme[acc_no]}'))
                             cmd=[f'ppp secret set "{cache_account[acc_no]["username"]}" disabled=no']
                             hermes.ssh_command(cmd)
-                        elif cache_package[cache_account[sm_acc]["package"]]["type"] == 'hotspot':
+                        elif cache_package[cache_account[acc_no]["package"]]["type"] == 'hotspot':
                             print(MENU(f'CREATING NEW REMOTE HOTSPOT SESSION FOR {account_nme[acc_no]}'))
                             cmd=[f'ip hotspot user set "{cache_account[acc_no]["username"]}" limit-uptime=0']
                             hermes.ssh_command(cmd)
@@ -797,21 +797,17 @@ class hermes:
             #ssh_otp=hermes.ssh_command('ip hotspot user print detail').strip().split(';;;')
 
             onl_lst=[]
-            otp=hermes.dbcommunication('select username,acc from account')
+            otp=hermes.dbcommunication('select username,name from account')
             cmd=[]
             for c in otp:
-                ssh_otp_list=cmd.append(f'ip hotspot user print detail where name="{c[0]}"')
+                cmd.append(f'ip hotspot user print detail where name="{c[0]}"')
+            ssh_otp_list=hermes.ssh_command(cmd)
 
             for ot in ssh_otp_list:
-                if not 'limit-uptime' in ot:
-                        onl_lst.append(c[1])
-                
-
-            #print(onl_lst)
-            print('\n\n')
-            for a in onl_lst:
-                if not a in cache_sessions.keys():
-                     print(RED(f'User {account_nme[a]} is not disabled yet has no active session'))
+                if 'limit-uptime' in ot:
+                        print(RED(f'User {MENU(otp[c][1])} is not disabled yet has no active session'))
+                c=c+1
+                                    
         
             print('\n\n')
 
@@ -1026,7 +1022,8 @@ def main():
         hermes.compensation()
     elif a=='3':
         def_date_lst=time.ctime().strip().split(' ')
-        def_date=f'{def_date_lst[2]}-{def_date_lst[1]}-{def_date_lst[4]}'
+       
+        def_date=f'{def_date_lst[3]}-{def_date_lst[1]}-{def_date_lst[-1]}'
         print("RUNNING PAYMENT MANAGER SERVICE...\n\n")
         while 1:
             code=input('INPUT TRANSACTION CODE: ')
