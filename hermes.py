@@ -216,7 +216,7 @@ def cache():
         return 1
     except Exception as e:
         print(RED('#'*10))
-        print(f'USER CASH FAIL: {str(e)}')
+        print(RED(f'USER CACHE FAIL: {str(e)}'))
         return 0
 
 
@@ -799,13 +799,14 @@ class hermes:
             onl_lst=[]
             otp=hermes.dbcommunication('select username,name from account')
             cmd=[]
-            for c in otp:
-                cmd.append(f'ip hotspot user print detail where name="{c[0]}"')
+            for un in otp:
+                cmd.append(f'ip hotspot user print detail where name="{un[0]}"')
             ssh_otp_list=hermes.ssh_command(cmd)
+            c=0
 
             for ot in ssh_otp_list:
                 if 'limit-uptime' in ot:
-                        print(RED(f'User {MENU(otp[c][1])} is not disabled yet has no active session'))
+                        print(f'{RED("User")} {MENU(otp[c][1])} {RED("is not disabled yet has no active session")}')
                 c=c+1
                                     
         
