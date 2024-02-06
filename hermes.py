@@ -802,9 +802,14 @@ class hermes:
             c=0
 
             for ot in ssh_otp_list:
-                if not 'limit-uptime' in ot: #find connected users
-                    if not cache_sessions[otp[c][2]]["session"]== 'active':
-                        print(f'{RED("User")} {MENU(otp[c][1])} {RED("is connected yet has no active session")}')
+                try: 
+                    if not 'limit-uptime' in ot: #find connected users
+                        if not cache_sessions[otp[c][2]]["status"]== 'active':
+                            
+                                print(f'{RED("User")} {MENU(otp[c][1])} {RED("is connected yet has no active session")}')
+                except Exception as e:
+                    print(RED(f'ERROR CONFITMING FOR {MENU(otp[c][1])}'))
+
                 c=c+1
                                     
         
