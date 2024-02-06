@@ -75,8 +75,11 @@ def MENU(txt:str):
     return '\033[36m'+str(txt)+'\033[0m'
 
 def tme():
-    tme=f"[{time.ctime().strip().split(' ')[0]}, {time.ctime().strip().split(' ')[1]}/{time.ctime().strip().split(' ')[2]}/{time.ctime().strip().split(' ')[-1]} {time.ctime().strip().split(' ')[-2]}] "
+    tt=time.ctime().strip().split(' ')
+    tme=f"[{tt[3]}-{tt[1]}-{tt[-1]} {tt[-2]}] "
     return tme
+
+
 
 
 def log(dat:str):
