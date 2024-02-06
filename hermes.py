@@ -794,7 +794,7 @@ class hermes:
 
             #3. MIKROTIK ACTIVE CHECKER
 
-            otp=hermes.dbcommunication('select username,name from account')
+            otp=hermes.dbcommunication('select username,name,acc from account')
             cmd=[]
             for un in otp:
                 cmd.append(f'ip hotspot user print detail where name="{un[0]}"')
@@ -802,8 +802,9 @@ class hermes:
             c=0
 
             for ot in ssh_otp_list:
-                if 'limit-uptime' in ot:
-                        print(f'{RED("User")} {MENU(otp[c][1])} {RED("is not disabled yet has no active session")}')
+                if not 'limit-uptime' in ot: #find connected users
+                    if not cache_sessions[otp[c][2]]["session"]== 'active':
+                        print(f'{RED("User")} {MENU(otp[c][1])} {RED("is connected yet has no active session")}')
                 c=c+1
                                     
         
