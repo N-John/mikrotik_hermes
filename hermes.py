@@ -63,7 +63,7 @@ BEFORE RUNNING, MAKE SURE YOU HAVE THE FOLLOWING
 
 OWNER: JOHN NJOROGE
 GITHUB: https://github.com/N-John/mikrotik_hermes.git \n\n
-LAST MODIFIED: 27-Jan-2024
+LAST MODIFIED: 6-Feb-2024
     '''
 
 
@@ -85,7 +85,7 @@ def tme():
 def log(dat:str):
     with open (log_file,'a') as log:
         log.write(f'\n {tme()} {dat}')
-    print(f'{tme()} {dat}') #comment this line to reduce verbose
+    #print(f'{tme()} {dat}') #comment this line to reduce verbose
 
 def clear_terminal():
     # For Windows
@@ -296,7 +296,7 @@ class hermes:
             OUTPT=cu.fetchall()
             cx.commit()
             cx.close()
-            print(OUTPT)
+            #print(OUTPT)
             return OUTPT
 
         except Exception as e:
@@ -794,9 +794,6 @@ class hermes:
 
             #3. MIKROTIK ACTIVE CHECKER
 
-            #ssh_otp=hermes.ssh_command('ip hotspot user print detail').strip().split(';;;')
-
-            onl_lst=[]
             otp=hermes.dbcommunication('select username,name from account')
             cmd=[]
             for un in otp:
