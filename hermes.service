@@ -1,0 +1,12 @@
+[Unit]
+Description=Hermes hotspot service
+After=network.target
+
+[Service]
+User=username
+WorkingDirectory=/path/to/script
+ExecStart=/usr/bin/python /path/to/script/background/hermes_service.py
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

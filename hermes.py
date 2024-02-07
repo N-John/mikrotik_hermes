@@ -80,8 +80,6 @@ def tme():
     return tme
 
 
-
-
 def log(dat:str):
     with open (log_file,'a') as log:
         log.write(f'\n {tme()} {dat}')
@@ -769,10 +767,12 @@ class hermes:
                 #check database
                 if not os.path.exists(database):
                     print(f'DATABASE FILE NOT FOUND AT {database}. Cannot proceed.')
+                    log(f'DATABASE FILE NOT FOUND AT {database}. Cannot proceed.')
                     sys.exit()
 
                 if not cache() :
                     print("cache failed")
+                    log("cache failed")
 
                 cx = sqlite3.connect(database)
                 cu = cx.cursor()
@@ -786,6 +786,7 @@ class hermes:
                 cx.close()
             except Exception as e:
                 print(f'{tme()}ERROR. SQL SERVER UNREACHABLE')
+                log('ERROR. SQL SERVER UNREACHABLE')
                 sys.exit() #EXIT PROGRAM
 
             #2. RUN SESSION MONITOR TO DISCONNECT ANY UNAUTHORISED USERS
@@ -807,8 +808,10 @@ class hermes:
                         if not cache_sessions[otp[c][2]]["status"]== 'active':
 
                                 print(f'{RED("User")} {MENU(otp[c][1])} {RED("is connected yet has no active session")}')
+                                log(f'User {(otp[c][1])} is connected yet has no active session"')
                 except Exception as e:
-                    print(RED(f'ERROR CONFIRMING SESSION STATUS FOR {MENU(otp[c][1])}'))
+                    print(RED(f'ERROR CONFIRMING SESSION STATUS FOR {(otp[c][1])}'))
+                    log(f'ERROR CONFIRMING SESSION STATUS FOR {otp[c][1]}')
 
                 c=c+1
             print('\n\n')
@@ -817,7 +820,7 @@ class hermes:
                     
         except Exception as e:
             print(RED(f'{tme()}FAILED RUNNING STARTUP. ERROR: {str(e)}'))
-            log(f'{tme()}FAILED RUNNING STARTUP. ERROR: {str(e)}')
+            log(f'FAILED RUNNING STARTUP. ERROR: {str(e)}')
             return 0
     
     def manual():
@@ -865,6 +868,7 @@ class hermes:
             if len(SCHEDULED_SESSIION_DISSCONNECT) >= 1:
 
                 print(GREEN(f'{tme()} RUNNING AUTO SESSION MONITOR.SERVICE.'))
+                log('RUNNING AUTO SESSION MONITOR.SERVICE.')
                 # Convert each date string in the list to a datetime object
                 date_objects = [datetime.strptime(date, '%d-%b-%Y|%I:%M %p') for date in SCHEDULED_SESSIION_DISSCONNECT]
                 smallest_date = min(date_objects)
@@ -872,6 +876,7 @@ class hermes:
                 next_expiery = datetime.combine(datetime.strptime(dte_lst[0], "%d-%b-%Y").date(), datetime.strptime(dte_lst[1], "%I:%M %p").time())
 
                 print(MENU(f"Next disconnection {next_expiery}"))
+                log(f"Next disconnection {next_expiery}")
                 print('To exit loop, press CTRL+C')
                 while 1:
                     time.sleep(3)
