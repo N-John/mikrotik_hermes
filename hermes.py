@@ -245,6 +245,65 @@ def menu(menus:list):#A MODIFICATION OF https://github.com/N-John/mmenu.git
         log(f'ERROR RUNNING MENU: {str(e)}')     
         return -1        
 
+class _admin:
+    def accounting():
+        try:
+            tt=time.ctime().strip().split(' ')
+            while 1:
+                START_DATE=input('INPUT START DATE[1-Jan-2024]: ').strip()
+                if START_DATE.capitalize() == '':
+                    START_DATE='1-Jan-2024'
+
+                START_TIME=input('INPUT START TIME[00:00 AM]: ').strip()
+                if START_TIME.capitalize() == '':
+                    START_TIME='00:00 AM'
+
+                END_DATE=input(f'INPUT END DATE[{tt[3]}-{tt[1]}-{tt[-1]}]: ').strip()
+                if END_DATE.capitalize()=='':
+                    END_DATE={tt[3]}-{tt[1]}-{tt[-1]}
+                
+                END_TIME=input(f'INPUT END TIME[{tt[-2]}]: ').strip()
+                if END_TIME.capitalize()=='':
+                    END_TIME={tt[-2]}
+                
+                cnf=input('CONFIRM[Y/N]: ').strip()
+                if cnf.capitalize()=='Y':
+                    break
+                else:
+                    return 1
+
+            cx = sqlite3.connect(database)
+            cu = cx.cursor()
+            cu.execute('SELECT * FROM payments')
+            OUTPT=cu.fetchall()
+            cx.close()
+            total = 0
+            c=0
+            for line in OUTPT:
+                start_combined_datetime = datetime.combine(datetime.strptime(START_DATE, "%d-%b-%Y").date(), datetime.strptime(START_TIME, "%I:%M %p").time())
+                end_combined_datetime = datetime.combine(datetime.strptime(END_DATE, "%d-%b-%Y").date(), datetime.strptime(END_TIME, "%I:%M %p").time())
+                payment_combined_datetime = datetime.combine(datetime.strptime(line[5], "%d-%b-%Y").date(), datetime.strptime(line[6], "%I:%M %p").time())
+                if payment_combined_datetime >= start_combined_datetime and payment_combined_datetime <= end_combined_datetime:
+                    print(line)
+                    total = total + line[3]
+                    c=c+1
+            
+            print('_'*50)
+            print(f'TOTAL INCOME: {total}')
+            print(f'PAYMENT COUNT: {c}')
+            print('_'*50)
+            
+
+            
+        except Exception as e:
+            print(RED(f'FAIL ADMIN ACCOUNTING WITH ERROR: [{str(e)}]'))
+
+    def user_man():
+        try:
+            pass
+        except Exception as e:
+            print(RED(f'FAIL ADMIN USER_MAN WITH ERROR: [{str(e)}]'))
+
 
 class hermes:
     def ssh_command(cmds:list):
@@ -1019,7 +1078,7 @@ class hermes:
 
                    
 def main():
-    menu_list=['ADD USER','COMPENSATION','ADD USER PAYMENT','SESSION EDIT','SWITCH TO AUTO_MONITOR','STATUS','MANUAL CLI','EXIT']
+    menu_list=['ADD USER','SESSION DAYS ADD','ADD USER PAYMENT','SESSION EDIT','SWITCH TO AUTO_MONITOR','STATUS','MANUAL CLI','PAYMENTS RETRIEVE','EXIT']
     a=str(menu(menu_list))
     if a=='1':#add user
         print(GREEN('SWITCHING TO ADD USER'))
@@ -1059,10 +1118,13 @@ def main():
     elif a=='6':
         print(GREEN('CURRENT SESSIONS'))
         hermes.status()
+    elif a=='8':
+        print(GREEN('SWITCHING TO ADMIN SESSION CHECK'))
+        _admin.accounting()
     elif a=='7':
         print(GREEN('SWITCHING TO MANUAL CLI'))
         hermes.manual()
-    elif a=='8':
+    elif a=='9':
         print(f'{tme()}EXITING WINGU.SERVICES')
         log('USER REQUEST EXIT FROM SERVICE')
         sys.exit()

@@ -196,7 +196,7 @@ def _cache_update():
     except Exception as e:
         print('#'*10)
         print(f'USER CACHE FAIL: {str(e)}')
-        return 0
+        return 1 # TEST VARIABLE SHOULD BE CHANGED
 
 class _hermes_service:
     def database_cmd(comm:str):
@@ -477,7 +477,7 @@ if not os.path.exists(service_log_file):
     print((f'LOG FILE SUCCESSFULY CREATED AT {current_directory}'))
 
 
-if not os.path.join(current_directory, input_fl) in dir:
+if not os.path.exists(os.path.join(current_directory, input_fl)):
     print(('INPUT FILE NOT FOUND'))
     print(f'Input file could not be found..EXITING PROGRAM')
     log(f'Input file could not be found..EXITING PROGRAM')
