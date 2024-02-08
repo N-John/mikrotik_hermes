@@ -256,7 +256,7 @@ class _admin:
 
                 START_TIME=input('INPUT START TIME[00:00 AM]: ').strip()
                 if START_TIME.capitalize() == '':
-                    START_TIME='00:00 AM'
+                    START_TIME='12:00 AM'
 
                 END_DATE=input(f'INPUT END DATE[{tt[3]}-{tt[1]}-{tt[-1]}]: ').strip()
                 if END_DATE.capitalize()=='':
@@ -264,7 +264,7 @@ class _admin:
                 
                 END_TIME=input(f'INPUT END TIME[{tt[-2]}]: ').strip()
                 if END_TIME.capitalize()=='':
-                    END_TIME={tt[-2]}
+                    END_TIME='11:59 PM'
                 
                 cnf=input('CONFIRM[Y/N]: ').strip()
                 if cnf.capitalize()=='Y':
