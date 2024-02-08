@@ -254,7 +254,7 @@ class _admin:
                 if START_DATE.capitalize() == '':
                     START_DATE='1-Jan-2024'
 
-                START_TIME=input('INPUT START TIME[00:00 AM]: ').strip()
+                START_TIME=input('INPUT START TIME[12:00 AM]: ').strip()
                 if START_TIME.capitalize() == '':
                     START_TIME='12:00 AM'
 
@@ -262,7 +262,7 @@ class _admin:
                 if END_DATE.capitalize()=='':
                     END_DATE={tt[3]}-{tt[1]}-{tt[-1]}
                 
-                END_TIME=input(f'INPUT END TIME[{tt[-2]}]: ').strip()
+                END_TIME=input(f'INPUT END TIME[11:59 PM]: ').strip()
                 if END_TIME.capitalize()=='':
                     END_TIME='11:59 PM'
                 
@@ -280,13 +280,16 @@ class _admin:
             total = 0
             c=0
             for line in OUTPT:
-                start_combined_datetime = datetime.combine(datetime.strptime(START_DATE, "%d-%b-%Y").date(), datetime.strptime(START_TIME, "%I:%M %p").time())
-                end_combined_datetime = datetime.combine(datetime.strptime(END_DATE, "%d-%b-%Y").date(), datetime.strptime(END_TIME, "%I:%M %p").time())
-                payment_combined_datetime = datetime.combine(datetime.strptime(line[5], "%d-%b-%Y").date(), datetime.strptime(line[6], "%I:%M %p").time())
-                if payment_combined_datetime >= start_combined_datetime and payment_combined_datetime <= end_combined_datetime:
-                    print(line)
-                    total = total + line[3]
-                    c=c+1
+                try:
+                    start_combined_datetime = datetime.combine(datetime.strptime(START_DATE, "%d-%b-%Y").date(), datetime.strptime(START_TIME, "%I:%M %p").time())
+                    end_combined_datetime = datetime.combine(datetime.strptime(END_DATE, "%d-%b-%Y").date(), datetime.strptime(END_TIME, "%I:%M %p").time())
+                    payment_combined_datetime = datetime.combine(datetime.strptime(line[5], "%d-%b-%Y").date(), datetime.strptime(line[6], "%I:%M %p").time())
+                    if payment_combined_datetime >= start_combined_datetime and payment_combined_datetime <= end_combined_datetime:
+                        print(line)
+                        total = total + line[3]
+                        c=c+1
+                except:
+                    continue
             
             print('_'*50)
             print(f'TOTAL INCOME: {total}')
