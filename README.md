@@ -1,6 +1,6 @@
 # mikrotik_hermes
 An automated service which is used to manage users connections to mikrotik's hotsport or pppoe service.<br>
-<h3>IT SHOULD BE NOTED THAT THIS IS STILL IN CREATION</h3>
+
 <section>
 Mikrotik hermes is a python script that works on any mkrotik endpoint which can run python. This service is created for person[s] / businesses using mikrotik hotspot and mikrotik pppoe service as an ISP. It is able to manage a wide number of users matching them to their respective packages and automaticaly manage their subscription periode. It provides a wide variety of tools to interact with the system, the sql and even ssh to the mikrotik from the service itself.<br>
 It's simplistic design enables a person with little to no mikroik skills to also operate it and explore the world of mikrotik. It facilitates:<br>
@@ -11,6 +11,7 @@ It's simplistic design enables a person with little to no mikroik skills to also
 <div>*Mikrotik Hotspot<div>
 <div>*Python scripting<div>
 <div>*System administration<div>
+<div>*Payment retriever<div>
 
 </section>
 <section>
@@ -27,13 +28,14 @@ It's simplistic design enables a person with little to no mikroik skills to also
 <pre>
      +--------------------------------+
      | (1) ADD USER                   |
-     | (2) USER COMPENSATION          |
-     | (3) USER PAYMENT MANAGEMENT    |
+     | (2) SESSIONS DAYS ADD          |
+     | (3) ADD USER PAYMENT	      |
      | (4) SESSION EDIT               |
      | (5) SWITCH TO AUTO_MONITOR     |
      | (6) STATUS                     |
      | (7) MANUAL CLI                 |
-     | (8) EXIT                       |
+     | (8) PAYMENT RETRIEVE           |
+     | (9) EXIT                       |
      +--------------------------------+
 </pre>
 <p>Before use, make sure you edit data on tile named "variables.txt"</p>

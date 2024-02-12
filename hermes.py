@@ -34,6 +34,7 @@ input_fl='variables.txt'
 running = True
 account_nme={}
 
+
 #CACHE
 cache_account={}
 cache_contacts={}
@@ -75,10 +76,9 @@ def MENU(txt:str):
     return '\033[36m'+str(txt)+'\033[0m'
 
 def tme():
-    tt=time.ctime().strip().split(' ')
-    tme=f"[{tt[3]}-{tt[1]}-{tt[-1]} {tt[-2]}] "
+    TME=time.ctime().split(' ')
+    tme=f"[{TME[-3]}-{TME[1]}-{TME[-1]} {TME[-2]}] "
     return tme
-
 
 def log(dat:str):
     with open (log_file,'a') as log:
@@ -92,7 +92,6 @@ def clear_terminal():
     else:
         # For Unix/Linux/MacOS
         print('\033c', end='')
-
 
 def cache():
     try:
@@ -197,15 +196,15 @@ def cache():
         cu.execute('SELECT * FROM pppoe_account')
         OUTPT=cu.fetchall()
         for data in OUTPT:
-            cache_pppoe[data[0]]={"name"      :data[1],
-                                "phone"       :data[2],
-                                "location"    :data[3],
-                                "ip"    :data[4],
+            cache_pppoe[data[0]]={"name"        :data[1],
+                                "phone"         :data[2],
+                                "location"      :data[3],
+                                "ip"            :data[4],
                                 "username"      :data[5],
                                 "password"      :data[6],
-                                "package"        :data[8],
+                                "package"       :data[8],
                                 "creation date" :data[7],
-                                "balance"        :data[9]
+                                "balance"       :data[9]
                                 }
         
         print(f"{'#'*10}] 100%\033[0m")
@@ -216,7 +215,6 @@ def cache():
         print(RED('#'*10))
         print(RED(f'USER CACHE FAIL: {str(e)}'))
         return 0
-
 
 def menu(menus:list):#A MODIFICATION OF https://github.com/N-John/mmenu.git
     try:
@@ -248,7 +246,7 @@ def menu(menus:list):#A MODIFICATION OF https://github.com/N-John/mmenu.git
 class _admin:
     def accounting():
         try:
-            tt=time.ctime().strip().split(' ')
+            tt=time.ctime().split(' ')
             while 1:
                 START_DATE=input('INPUT START DATE[1-Jan-2024]: ').strip()
                 if START_DATE.capitalize() == '':
@@ -258,14 +256,14 @@ class _admin:
                 if START_TIME.capitalize() == '':
                     START_TIME='12:00 AM'
 
-                END_DATE=input(f'INPUT END DATE[{tt[3]}-{tt[1]}-{tt[-1]}]: ').strip()
+                END_DATE=input(f'INPUT END DATE[{tt[-3]}-{tt[1]}-{tt[-1]}]: ').strip()
                 if END_DATE.capitalize()=='':
-                    END_DATE={tt[3]}-{tt[1]}-{tt[-1]}
+                    END_DATE=f'{tt[-3]}-{tt[1]}-{tt[-1]}'
                 
                 END_TIME=input(f'INPUT END TIME[11:59 PM]: ').strip()
                 if END_TIME.capitalize()=='':
                     END_TIME='11:59 PM'
-                
+                print(f'START DATE: {START_DATE}\nSTART TIME: {START_TIME}\nEND DATE: {END_DATE}\nEND TIME: {END_TIME}')
                 cnf=input('CONFIRM[Y/N]: ').strip()
                 if cnf.capitalize()=='Y':
                     break
@@ -279,25 +277,47 @@ class _admin:
             cx.close()
             total = 0
             c=0
+            accounting_dict={}
             for line in OUTPT:
                 try:
                     start_combined_datetime = datetime.combine(datetime.strptime(START_DATE, "%d-%b-%Y").date(), datetime.strptime(START_TIME, "%I:%M %p").time())
                     end_combined_datetime = datetime.combine(datetime.strptime(END_DATE, "%d-%b-%Y").date(), datetime.strptime(END_TIME, "%I:%M %p").time())
                     payment_combined_datetime = datetime.combine(datetime.strptime(line[5], "%d-%b-%Y").date(), datetime.strptime(line[6], "%I:%M %p").time())
                     if payment_combined_datetime >= start_combined_datetime and payment_combined_datetime <= end_combined_datetime:
-                        print(line)
+                        #print(line)
+                        ak=list(accounting_dict.keys())
+                        if line[1] in ak:
+                            a_total=accounting_dict[line[1]]["total"]+line[3]
+                            accounting_dict[line[1]]["total"]=a_total
+                            a_count=accounting_dict[line[1]]["count"]+1
+                            accounting_dict[line[1]]["count"]=a_count
+                        else:
+                            accounting_dict[line[1]] = {
+                                'total': line[3],
+                                'count': 1
+                            }
                         total = total + line[3]
                         c=c+1
                 except:
+                    print(line[5]+'#'+line[6])
                     continue
             
-            print('_'*50)
-            print(f'TOTAL INCOME: {total}')
-            print(f'PAYMENT COUNT: {c}')
-            print('_'*50)
-            
-
-            
+            print(f'+{"-"*10}+{"-"*35}+{"-"*7}+{"-"*15}+')
+            print(f'|ACCOUNT{" "*3}|NAME{" "*31}| COUNT |AMOUNT{" "*9}|')
+            print(f'+{"-"*10}+{"-"*35}+{"-"*7}+{"-"*15}+')
+            for acc in accounting_dict:
+                print(f'|{acc}{" "*(10-len(acc))}',end='')
+                print(f'|{account_nme[acc]}{" "*(35-len(account_nme[acc]))}',end='')
+                print(f'|{accounting_dict[acc]["count"]}{" "*(7-len(str(accounting_dict[acc]["count"])))}',end='')
+                print(f'| Ksh {accounting_dict[acc]["total"]}{" "*(10-len(str(accounting_dict[acc]["total"])))}|')
+                
+                #print(f'|{acc}{" "*(10-len(acc))}|{accounting_dict[acc]["count"]}{" "*(5-len(str(accounting_dict[acc]["count"])))}| Ksh {accounting_dict[acc]["total"]}{" "*(10-len(str(accounting_dict[acc]["total"])))}|')
+            print(f'+{"-"*10}+{"-"*35}+{"-"*7}+{"-"*15}+')
+            print(f'=> TOTAL ACCOUNTS: {len(accounting_dict.keys())}')
+            print(f'=> TOTAL PAYMENTS: {c}')
+            print(f'=> TOTAL AMOUNT: Ksh {total}')
+            print('_'*57)
+           
         except Exception as e:
             print(RED(f'FAIL ADMIN ACCOUNTING WITH ERROR: [{str(e)}]'))
 
@@ -312,7 +332,6 @@ class hermes:
     def ssh_command(cmds:list):
         # Establish SSH connection to the MikroTik router
         try:
-
             output=[]
             if len(cmds)<1:
                 return 0
@@ -322,7 +341,6 @@ class hermes:
             print(GREEN(f"{tme()}CONNECTED TO SERVER VIA SSH"))
             
             for cmd in cmds:
-
                 print(f'Running command [{cmd}]')
                 stdin, stdout, stderr = ssh_client.exec_command(f'log warning "auto running command {cmd}"')
                 stdin, stdout, stderr = ssh_client.exec_command(cmd)
@@ -365,9 +383,9 @@ class hermes:
     
     def payments(code:str,amount:str,source:str,date:str,time_tm:str):
         try:
+            acc_type=''#hotspor or pppoe
             print(tme()+'RUNNING PAYMENT CHECKER')
             acc=''
-
             contacts=list(cache_contacts.keys())
             if not source in contacts:
                 print(RED(f'SOURCE {source} PROVIDED DOES NOT EXIST.'))
@@ -378,13 +396,23 @@ class hermes:
                     for ch in cache_account:
                         ld_list.append(f"{cache_account[ch]['name']} : {ch}")
 
+                    for cp in cache_pppoe:
+                        ld_list.append(f"{cache_pppoe[cp]['name']} : {cp}")
+
                     otp=menu(ld_list)-1
                     cnf = input(f'CONFIRM {ld_list[otp]} [Y/N] ')
                     if cnf.strip().capitalize() == 'Y':
                         
                         print(GREEN('CONFIRMED..'))
                         acc=ld_list[otp].split(':')[1].strip()
-                        phone=cache_account[ld_list[otp].split(':')[1].strip()]["phone"]
+                        if 'Wn' in acc:
+                            phone=cache_pppoe[ld_list[otp].split(':')[1].strip()]["phone"]
+                            acc_type='pppoe'
+                        elif 'Wp' in acc:
+                            phone=cache_account[ld_list[otp].split(':')[1].strip()]["phone"]
+                            acc_type='hotspot'
+
+
                         cx = sqlite3.connect(database)
                         cu = cx.cursor()
                         cu.execute(f'SELECT cid FROM contacts')
@@ -402,7 +430,10 @@ class hermes:
 
             else:
                 acc = cache_contacts[source]['account']
-
+                if 'Wn' in acc:
+                    acc_type='pppoe'
+                else:
+                    acc_type='hotspot'
 
             print(GREEN('Account determined as '+acc))
 
@@ -415,7 +446,7 @@ class hermes:
             log(f'insert into payments values ({pid},"{acc}","{code}",{amount},"{source}","{date}","{time_tm}")')
             print('payment values added')
             #add to finances 
-            print(f'adding to finance for account_nm[acc]')
+            print(f'adding to finance for {account_nme[acc]}')
             cu.execute(f'SELECT fid FROM finances')
             fid=str(int(cu.fetchall()[-1][0])+1)
             cu.execute(f'insert into finances values ({fid},"{acc}",{amount},0.00,"DEPOSIT","{str(tme())}")')
@@ -423,16 +454,27 @@ class hermes:
 
             #ADD MONEY TO USER ACCOUNT
             print(f'Adding money to {account_nme[acc]} account')
-            balance=cache_account[acc]['balance'] + int(amount)
-            print(f'NEW BALANCE {balance}')
-            cu.execute(f'UPDATE account set balance = {str(balance)} WHERE acc = "{acc}";')
-            log(f'UPDATE account set balance = {str(balance)} WHERE acc = "{acc}";')
-            print(GREEN(f'{tme()} USER PAYMENT ADDED WITH VALUES: ({pid},\nname: "{account_nme[acc]}",\ncode : "{code}",\nammount : {amount},\nsource : "{source}",\ndate : "{date}",\ntime : "{time_tm}")'))
+            if acc_type == 'hotspot':
+                balance=cache_account[acc]['balance'] + int(amount)
+                print(f'NEW HOTSPOT BALANCE {balance}')
+                cu.execute(f'UPDATE account set balance = {str(balance)} WHERE acc = "{acc}";')
+                log(f'UPDATE account set balance = {str(balance)} WHERE acc = "{acc}";')
+            elif acc_type == 'pppoe':
+                balance=cache_pppoe[acc]['balance'] + int(amount)
+                print(f'NEW PPPoE BALANCE {balance}')
+                cu.execute(f'UPDATE pppoe_account set balance = {str(balance)} WHERE acc = "{acc}";')
+                log(f'UPDATE pppoe_account set balance = {str(balance)} WHERE acc = "{acc}";')
+
+            #print(f'NEW BALANCE {balance}')
+            #cu.execute(f'UPDATE account set balance = {str(balance)} WHERE acc = "{acc}";')
+            #log(f'UPDATE account set balance = {str(balance)} WHERE acc = "{acc}";')
+            print(GREEN(f'{tme()} USER PAYMENT ADDED WITH VALUES: ({pid},\nname: "{account_nme[acc]}",\ncode : "{code}",\namount : {amount},\nsource : "{source}",\ndate : "{date}",\ntime : "{time_tm}")'))
             cx.commit()
             cx.close()
             cache()
 
-            hermes.session_monitor(acc)
+            if acc_type == 'hotspot':#TO BE REMOVED WITH UPDATE
+                hermes.session_monitor(acc)
             return 1
         except Exception as e:
             print(RED(f'FAILED ADD PAY: {str(e)}'))
@@ -610,7 +652,7 @@ class hermes:
             cx.close()
 
             mikrotik_profs=['trial_profile','5mbps_hup','7mbps_hup','10MBPS_HUP']
-            acc=f'WnWp{aid}'
+            acc=f'Wp{aid}'
             def_pkg=pkgs[1][1]
             def_pkg_no=pkgs[1][0]
             def_date_lst=time.ctime().strip().split(' ')
@@ -651,19 +693,27 @@ class hermes:
             
             cx = sqlite3.connect(database)
             cu = cx.cursor()
-            cu.execute(f'INSERT INTO account values("{acc}","{name}","{phne}",{pkg},"{usernm}","{pswrd}","{inst_date}",0)')
-            
-            cu.execute('SELECT * FROM contacts ORDER BY cid desc limit 1')
-            cid=str(int(cu.fetchone()[0]) + 1)
-            
-            cu.execute(f'INSERT INTO contacts values({cid},"{acc}","{phne}")')
+            #cu.execute(f'INSERT INTO account values("{acc}","{name}","{phne}",{pkg},"{usernm}","{pswrd}","{inst_date}",0)')
+            #cu.execute('SELECT * FROM contacts ORDER BY cid desc limit 1')
+            #cid=str(int(cu.fetchone()[0]) + 1)
+            #cu.execute(f'INSERT INTO contacts values({cid},"{acc}","{phne}")')
             cmd=[]
             
             if pkg_type == 'hotspot':
+                cu.execute(f'INSERT INTO account values("{acc}","{name}","{phne}",{pkg},"{usernm}","{pswrd}","{inst_date}",0)')
+                cu.execute('SELECT * FROM contacts ORDER BY cid desc limit 1')
+                cid=str(int(cu.fetchone()[0]) + 1)
+                cu.execute(f'INSERT INTO contacts values({cid},"{acc}","{phne}")')
                 cmd.append(f'ip hotspot user add comment="{name}" name="{usernm}" password="{pswrd}" profile="{mikrotik_profs[int(pkg)]}"  server=hs-new_wingu limit-uptime=5m ')
                 
             elif pkg_type == 'pppoe':
-                cmd.append(f'ppp secret add comment="{name}" name="{usernm}" password="{pswrd}" profile="{mikrotik_profs[int(pkg)]}"  service=ppppoe ')
+                location=input('Input location: ').strip()
+                ip=input('Input remote ip: ').strip().strip()
+                cu.execute(f'INSERT INTO pppoe_account values("{acc}","{name}","{phne}","{location}","{ip}","{usernm}","{pswrd}","{inst_date}",{pkg},0)')
+                cu.execute('SELECT * FROM contacts ORDER BY cid desc limit 1')
+                cid=str(int(cu.fetchone()[0]) + 1)
+                cu.execute(f'INSERT INTO contacts values({cid},"{acc}","{phne}")')
+                cmd.append(f'ppp secret add comment="{name}" name="{usernm}" password="{pswrd}" profile="{mikrotik_profs[int(pkg)]}"  service=pppoe ')
                 
             hermes.ssh_command(cmd)
 
@@ -844,6 +894,14 @@ class hermes:
                     accnt=l[0]
                     nme=l[1]
                     account_nme[accnt]=nme
+                
+                cu.execute('Select * FROM pppoe_account')
+                dt=cu.fetchall()
+                for l in dt:
+                    accnt=l[0]
+                    nme=l[1]
+                    account_nme[accnt]=nme
+
                 print(GREEN(f'{tme()} {database} SQL SERVER AVAILABLE'))
                 cx.close()
             except Exception as e:
@@ -1092,7 +1150,7 @@ def main():
     elif a=='3':
         def_date_lst=time.ctime().strip().split(' ')
        
-        def_date=f'{def_date_lst[3]}-{def_date_lst[1]}-{def_date_lst[-1]}'
+        def_date=f'{def_date_lst[-3]}-{def_date_lst[1]}-{def_date_lst[-1]}'
         print("RUNNING PAYMENT MANAGER SERVICE...\n\n")
         while 1:
             code=input('INPUT TRANSACTION CODE: ')
@@ -1142,7 +1200,7 @@ print (lg)
 
 current_directory = os.getcwd()  # Get the current working directory
 dir=os.listdir(current_directory)
-if not os.path.join(current_directory, input_fl) in dir:
+if not input_fl in dir:
     print(RED('INPUT FILE NOT FOUND'))
     hermes.initial()
 
@@ -1158,9 +1216,11 @@ mk_password = ld[10].split('|')[2].strip()
 database = os.path.join(current_directory, database_name) 
 log_file= os.path.join(current_directory, log_file_name)
 
+
 # Call the function to clear the terminal screen
 clear_terminal()
 hermes.startup()
+
 #infinite loop
 while 1:
 	hermes.run()
