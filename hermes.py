@@ -1153,17 +1153,94 @@ def main():
         def_date=f'{def_date_lst[-3]}-{def_date_lst[1]}-{def_date_lst[-1]}'
         print("RUNNING PAYMENT MANAGER SERVICE...\n\n")
         while 1:
+            #SELECT SOURCE BY SELECTING ACCOUNT
+            acc=[]
+            acc_long=[]
+            acc=cache_account.keys()
+            pppoe_acc=[]
+            pppoe_acc=cache_pppoe.keys()
+            combined_acc=acc+pppoe_acc
+            for ac in combined_acc:
+                if ac in acc:
+                    acc_long.append(f'{cache_account[ac]["name"]} -> {ac}')
+                elif ac in pppoe_acc:
+                    acc_long.append(f'{cache_pppoe[ac]["name"]} -> {ac}')
+            
+            acc_long.append('SELECT ACCOUNT BY PHONE NO')
+            acc_long.append('EXIT')# add an exit setup
+
+            selection = acc_long[menu(acc_long)-1]
+
+            if selection=="EXIT":
+                print(GREEN('EXITING'))
+                return 0
+            elif selection=="SELECT ACCOUNT BY PHONE NO":
+                cont=input('INPUT PHONE NO: ').strip()
+                if not cont in cache_contacts.keys():
+                    cnf=input(RED(f'THE CONTACT {cont} DOES NOT EXIST IN DATABASE.\nDo you want to add contact [Y/N]? '))
+                    if cnf.strip().capitalize()=='Y':
+                        print("SELECT USER ACCOUNT: ")
+                        ld_list=[]
+                        for ch in cache_account:
+                            ld_list.append(f"{cache_account[ch]['name']} : {ch}")
+
+                        for cp in cache_pppoe:
+                            ld_list.append(f"{cache_pppoe[cp]['name']} : {cp}")
+
+                        otp=menu(ld_list)-1
+                        cnf = input(f'CONFIRM {ld_list[otp]} [Y/N] ')
+                        if cnf.strip().capitalize() == 'Y':
+
+                            print(GREEN('CONFIRMED..'))
+                            acc=ld_list[otp].split(':')[1].strip()
+                            if 'Wn' in acc:
+                                phone=cache_pppoe[ld_list[otp].split(':')[1].strip()]["phone"]
+                                acc_type='pppoe'
+                                selection=f'{cache_pppoe[acc]["name"]} [{acc}]'
+                            elif 'Wp' in acc:
+                                phone=cache_account[ld_list[otp].split(':')[1].strip()]["phone"]
+                                acc_type='hotspot'
+                                selection=f'{cache_account[acc]["name"]} [{acc}]'
+
+
+                            cx = sqlite3.connect(database)
+                            cu = cx.cursor()
+                            cu.execute(f'SELECT cid FROM contacts')
+                            cid=str(int(cu.fetchall()[-1][0])+1)
+                            cu.execute(f'INSERT INTO contacts VALUES({cid},"{acc}","{phone}")')
+                            cx.commit()
+                            cx.close()
+                            print(f'contact added: [{cid},"{acc}","{phone}"]')
+
+                            
+                            source_acc=acc
+                            source_cont=phone
+
+                    else:
+                        print(RED('ERROR: CANNOT PROCEED WITH NO ACCOUNT PROVIDED'))
+                        return 0
+            else:
+                source_acc=selection.split('-> ').strip()
+                acl=[]
+                for key, value in cache_contacts.items():
+                    if value.get("account") == source_acc:
+                        acl.append(key)
+                
+                source_cont=acl[menu(acl)-1]
+                
+
+
             code=input('INPUT TRANSACTION CODE: ')
             ammount=input('INPUT AMOUNT: ')
-            source=input('INPUT SOURCE: ')
+            #source=input('INPUT SOURCE: ')
             date=input(f'INPUT DATE [{def_date}] : ')
             if date == '':
                 date= str(def_date)
             timet=input('INPUT TIME[hh:mm PM/AM]: ')
-            conf=input(MENU(f'\nCODE: {code},\n  AMOUNT: {ammount},\n  SOURCE : {source},\n   DATE : {date},\n    TIME: {timet}\n ')+' CONFIRM DATA Y/N: ')
+            conf=input(MENU(f'\nCODE: {code},\n  AMOUNT: {ammount},\n  Name: {selection}\n   SOURCE : {source_cont},\n   DATE : {date},\n    TIME: {timet}\n ')+' CONFIRM DATA Y/N: ')
             
             if conf.strip().capitalize()=='Y':
-                hermes.payments(code,ammount,source,date,timet)
+                hermes.payments(code,ammount,source_cont,date,timet)
                 break
             else:
                 cn=input(MENU('DO YOU WANT TO EXIT [Y/N]?'))
