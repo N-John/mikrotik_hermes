@@ -1156,9 +1156,9 @@ def main():
             #SELECT SOURCE BY SELECTING ACCOUNT
             acc=[]
             acc_long=[]
-            acc=cache_account.keys()
+            acc=list(cache_account.keys())
             pppoe_acc=[]
-            pppoe_acc=cache_pppoe.keys()
+            pppoe_acc=list(cache_pppoe.keys())
             combined_acc=acc+pppoe_acc
             for ac in combined_acc:
                 if ac in acc:
@@ -1176,7 +1176,7 @@ def main():
                 return 0
             elif selection=="SELECT ACCOUNT BY PHONE NO":
                 cont=input('INPUT PHONE NO: ').strip()
-                if not cont in cache_contacts.keys():
+                if not cont in list(cache_contacts.keys()):
                     cnf=input(RED(f'THE CONTACT {cont} DOES NOT EXIST IN DATABASE.\nDo you want to add contact [Y/N]? '))
                     if cnf.strip().capitalize()=='Y':
                         print("SELECT USER ACCOUNT: ")
@@ -1215,18 +1215,31 @@ def main():
                             
                             source_acc=acc
                             source_cont=phone
+                        else:
+                            print(RED('ERROR: CANNOT PROCEED WITH NO ACCOUNT PROVIDED'))
+                            return 0
 
                     else:
                         print(RED('ERROR: CANNOT PROCEED WITH NO ACCOUNT PROVIDED'))
                         return 0
+                
+                #if contact is found
+                else:
+                    source_acc=cache_contacts[cont]['account']
+                    source_cont=cont
+
+                    
             else:
-                source_acc=selection.split('-> ').strip()
+                source_acc=selection.split('-> ')[1].strip()
                 acl=[]
                 for key, value in cache_contacts.items():
                     if value.get("account") == source_acc:
                         acl.append(key)
                 
-                source_cont=acl[menu(acl)-1]
+                if len(acl)==1:
+                    source_cont=acl[0]
+                else:
+                    source_cont=acl[menu(acl)-1]
                 
 
 
