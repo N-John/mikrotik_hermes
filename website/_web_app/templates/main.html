@@ -1,3 +1,5 @@
+{%load static%}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -40,15 +42,17 @@
 </style>
 </head>
 <body>
+
   <header>
-    <h1>Hermes Admin Dashboard</h1>
+    <h2><a href="/">WIRED NETWORKING</a></h2>
+    <h1>Hermes Admin Dashboard {{ name }}</h1>
   </header>
   <nav>
-    <a href="payments_add.html">Payment Input</a>
-    <a href="add_user.html">Create New User</a>
-    <a href="payment_history.html">Payment History</a>
-    <a href="active_sessions.html">Active Sessions</a>
-    <a href="edit_sessions.html">Edit Sessions</a>
+    <a href="payment/input">Payment Input</a>
+    <a href="user/add">Create New User</a>
+    <a href="payment/history">Payment History</a>
+    <a href="session/active">Active Sessions</a>
+    <a href="session/edit">Edit Sessions</a>
   </nav>
 </body>
 </html>

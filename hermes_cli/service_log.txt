@@ -1,0 +1,121 @@
+LOG FILE CREATED ON [7-Feb-2024 13:41:48] 
+ [7-Feb-2024 13:41:48]  Input file could not be found..EXITING PROGRAM
+ [7-Feb-2024 13:48:14]  Input file could not be found..EXITING PROGRAM
+ [7-Feb-2024 13:49:52]  _hermes_service WINGU SERVICE STARTUP PROCESS...
+ [7-Feb-2024 13:49:52]  cache failed. Exiting
+ [7-Feb-2024 13:51:42]  _hermes_service WINGU SERVICE STARTUP PROCESS...
+ [7-Feb-2024 13:51:42]  RUNNING SESSION MONITOR
+ [7-Feb-2024 13:51:42]  Running db communication command [select username,name,acc from account]
+ [7-Feb-2024 13:51:42]  [7-Feb-2024 13:51:42] CONNECTED TO SERVER VIA SSH TO RUN COMMANDS ['ip hotspot user print detail where name="9999"', 'ip hotspot user print detail where name="cliff1"', 'ip hotspot user print detail where name="674206"', 'ip hotspot user print detail where name="Grace"', 'ip hotspot user print detail where name="ken"', 'ip hotspot user print detail where name="peninah"', 'ip hotspot user print detail where name="26996"', 'ip hotspot user print detail where name="Lewis"', 'ip hotspot user print detail where name="Brian"', 'ip hotspot user print detail where name="Kelvin"', 'ip hotspot user print detail where name="Nutshell"', 'ip hotspot user print detail where name="Dulcis"', 'ip hotspot user print detail where name="Dandenno"', 'ip hotspot user print detail where name="Stony3605"', 'ip hotspot user print detail where name="Kamikaze"', 'ip hotspot user print detail where name="Ruth"']
+ [7-Feb-2024 13:51:43]  ERROR CONFIRMING SESSION STATUS FOR ken
+ [7-Feb-2024 13:51:43]  RUNNING AUTO SESSION MONITOR.SERVICE.
+ [7-Feb-2024 13:51:43]  Next disconnection 2024-02-08 10:04:00
+ [7-Feb-2024 13:56:47]  _hermes_service WINGU SERVICE STARTUP PROCESS...
+ [7-Feb-2024 13:56:47]  RUNNING SESSION MONITOR
+ [7-Feb-2024 13:56:47]  Running db communication command [select username,name,acc from account]
+ [7-Feb-2024 13:56:48]  [7-Feb-2024 13:56:48] CONNECTED TO SERVER VIA SSH TO RUN COMMANDS ['ip hotspot user print detail where name="9999"', 'ip hotspot user print detail where name="cliff1"', 'ip hotspot user print detail where name="674206"', 'ip hotspot user print detail where name="Grace"', 'ip hotspot user print detail where name="ken"', 'ip hotspot user print detail where name="peninah"', 'ip hotspot user print detail where name="26996"', 'ip hotspot user print detail where name="Lewis"', 'ip hotspot user print detail where name="Brian"', 'ip hotspot user print detail where name="Kelvin"', 'ip hotspot user print detail where name="Nutshell"', 'ip hotspot user print detail where name="Dulcis"', 'ip hotspot user print detail where name="Dandenno"', 'ip hotspot user print detail where name="Stony3605"', 'ip hotspot user print detail where name="Kamikaze"', 'ip hotspot user print detail where name="Ruth"']
+ [7-Feb-2024 13:56:49]  ERROR CONFIRMING SESSION STATUS FOR ken
+ [7-Feb-2024 13:56:49]  RUNNING AUTO SESSION MONITOR.SERVICE.
+ [7-Feb-2024 13:56:49]  Next disconnection 2024-02-08 10:04:00
+ [7-Feb-2024 14:00:00]  _hermes_service WINGU SERVICE STARTUP PROCESS...
+ [7-Feb-2024 14:00:00]  RUNNING SESSION MONITOR
+ [7-Feb-2024 14:00:00]  Running db communication command [select username,name,acc from account]
+ [7-Feb-2024 14:00:01]  [7-Feb-2024 14:00:01] CONNECTED TO SERVER VIA SSH TO RUN COMMANDS ['ip hotspot user print detail where name="9999"', 'ip hotspot user print detail where name="cliff1"', 'ip hotspot user print detail where name="674206"', 'ip hotspot user print detail where name="Grace"', 'ip hotspot user print detail where name="ken"', 'ip hotspot user print detail where name="peninah"', 'ip hotspot user print detail where name="26996"', 'ip hotspot user print detail where name="Lewis"', 'ip hotspot user print detail where name="Brian"', 'ip hotspot user print detail where name="Kelvin"', 'ip hotspot user print detail where name="Nutshell"', 'ip hotspot user print detail where name="Dulcis"', 'ip hotspot user print detail where name="Dandenno"', 'ip hotspot user print detail where name="Stony3605"', 'ip hotspot user print detail where name="Kamikaze"', 'ip hotspot user print detail where name="Ruth"']
+ [7-Feb-2024 14:00:02]  ERROR CONFIRMING SESSION STATUS FOR ken
+ [7-Feb-2024 14:00:02]  RUNNING AUTO SESSION MONITOR.SERVICE.
+ [7-Feb-2024 14:00:02]  Next disconnection 2024-02-08 10:04:00
+ [7-Feb-2024 14:13:38]  _hermes_service WINGU SERVICE STARTUP PROCESS...
+ [7-Feb-2024 14:13:39]  RUNNING SESSION MONITOR
+ [7-Feb-2024 14:13:39]  Running db communication command [select username,name,acc from account]
+ [7-Feb-2024 14:13:39]  [7-Feb-2024 14:13:39] CONNECTED TO SERVER VIA SSH TO RUN COMMANDS ['ip hotspot user print detail where name="9999"', 'ip hotspot user print detail where name="cliff1"', 'ip hotspot user print detail where name="674206"', 'ip hotspot user print detail where name="Grace"', 'ip hotspot user print detail where name="ken"', 'ip hotspot user print detail where name="peninah"', 'ip hotspot user print detail where name="26996"', 'ip hotspot user print detail where name="Lewis"', 'ip hotspot user print detail where name="Brian"', 'ip hotspot user print detail where name="Kelvin"', 'ip hotspot user print detail where name="Nutshell"', 'ip hotspot user print detail where name="Dulcis"', 'ip hotspot user print detail where name="Dandenno"', 'ip hotspot user print detail where name="Stony3605"', 'ip hotspot user print detail where name="Kamikaze"', 'ip hotspot user print detail where name="Ruth"']
+ [7-Feb-2024 14:13:40]  ERROR CONFIRMING SESSION STATUS FOR ken
+ [7-Feb-2024 14:13:40]  RUNNING AUTO SESSION MONITOR.SERVICE.
+ [7-Feb-2024 14:13:40]  Next disconnection 2024-02-08 10:04:00
+ [7-Feb-2024 20:00:16]  _hermes_service WINGU SERVICE STARTUP PROCESS...
+ [7-Feb-2024 20:00:16]  RUNNING SESSION MONITOR
+ [7-Feb-2024 20:00:16]  Running db communication command [select username,name,acc from account]
+ [7-Feb-2024 20:00:17]  [7-Feb-2024 20:00:17] CONNECTED TO SERVER VIA SSH TO RUN COMMANDS ['ip hotspot user print detail where name="9999"', 'ip hotspot user print detail where name="cliff1"', 'ip hotspot user print detail where name="674206"', 'ip hotspot user print detail where name="Grace"', 'ip hotspot user print detail where name="ken"', 'ip hotspot user print detail where name="peninah"', 'ip hotspot user print detail where name="26996"', 'ip hotspot user print detail where name="Lewis"', 'ip hotspot user print detail where name="Brian"', 'ip hotspot user print detail where name="Kelvin"', 'ip hotspot user print detail where name="Nutshell"', 'ip hotspot user print detail where name="Dulcis"', 'ip hotspot user print detail where name="Dandenno"', 'ip hotspot user print detail where name="Stony3605"', 'ip hotspot user print detail where name="Kamikaze"', 'ip hotspot user print detail where name="Ruth"']
+ [7-Feb-2024 20:00:19]  ERROR CONFIRMING SESSION STATUS FOR ken
+ [7-Feb-2024 20:00:19]  RUNNING AUTO SESSION MONITOR.SERVICE.
+ [7-Feb-2024 20:00:19]  Next disconnection 2024-02-08 13:04:00
+ [8-Feb-2024 12:05:09]  _hermes_service WINGU SERVICE STARTUP PROCESS...
+ [8-Feb-2024 12:05:09]  RUNNING SESSION MONITOR
+ [8-Feb-2024 12:05:09]  Running db communication command [select username,name,acc from account]
+ [8-Feb-2024 12:05:10]  [8-Feb-2024 12:05:10] CONNECTED TO SERVER VIA SSH TO RUN COMMANDS ['ip hotspot user print detail where name="9999"', 'ip hotspot user print detail where name="cliff1"', 'ip hotspot user print detail where name="674206"', 'ip hotspot user print detail where name="Grace"', 'ip hotspot user print detail where name="ken"', 'ip hotspot user print detail where name="peninah"', 'ip hotspot user print detail where name="26996"', 'ip hotspot user print detail where name="Lewis"', 'ip hotspot user print detail where name="Brian"', 'ip hotspot user print detail where name="Kelvin"', 'ip hotspot user print detail where name="Nutshell"', 'ip hotspot user print detail where name="Dulcis"', 'ip hotspot user print detail where name="Dandenno"', 'ip hotspot user print detail where name="Stony3605"', 'ip hotspot user print detail where name="Kamikaze"', 'ip hotspot user print detail where name="Ruth"']
+ [8-Feb-2024 12:05:11]  ERROR CONFIRMING SESSION STATUS FOR ken
+ [8-Feb-2024 12:05:11]  RUNNING AUTO SESSION MONITOR.SERVICE.
+ [8-Feb-2024 12:05:11]  Next disconnection 2024-02-08 13:04:00
+ [8-Feb-2024 13:04:02]  Internal system interupt. Exiting monitor.service to check active sessions...
+ [8-Feb-2024 13:04:02]  RUNNING SESSION MONITOR
+ [8-Feb-2024 13:04:02]  SESSION EXPIRED FOR pauline Otieno[WnWp5503].
+ [8-Feb-2024 13:04:02]  UPDATE sessions SET status = "expired" WHERE acc = "WnWp5503"
+ [8-Feb-2024 13:04:03]  [8-Feb-2024 13:04:03] CONNECTED TO SERVER VIA SSH TO RUN COMMANDS ['ip hotspot user set "674206" limit-uptime=1s', 'ip hotspot active remove [find name="674206"]']
+ [8-Feb-2024 13:04:03]  [8-Feb-2024 13:04:03]  USER pauline Otieno DISCONTINUED FROM CONNECTION
+ [8-Feb-2024 13:04:03]  RUNNING AUTO SESSION MONITOR.SERVICE.
+ [8-Feb-2024 13:04:03]  Next disconnection 2024-02-08 19:54:00
+ [8-Feb-2024 19:54:02]  Internal system interupt. Exiting monitor.service to check active sessions...
+ [8-Feb-2024 19:54:02]  RUNNING SESSION MONITOR
+ [8-Feb-2024 19:54:02]  SESSION EXPIRED FOR Purity Wang'ombe[WnWp5515].
+ [8-Feb-2024 19:54:02]  UPDATE sessions SET status = "expired" WHERE acc = "WnWp5515"
+ [8-Feb-2024 19:54:02]  SSH ERROR OCCURED: [Errno 101] Network is unreachable
+ [8-Feb-2024 19:54:02]  [8-Feb-2024 19:54:02]  USER Purity Wang'ombe DISCONTINUED FROM CONNECTION
+ [8-Feb-2024 19:54:02]  RUNNING AUTO SESSION MONITOR.SERVICE.
+ [8-Feb-2024 19:54:02]  Next disconnection 2024-02-09 10:38:00
+ [8-Feb-2024 20:30:43]  _hermes_service WINGU SERVICE STARTUP PROCESS...
+ [8-Feb-2024 20:30:43]  RUNNING SESSION MONITOR
+ [8-Feb-2024 20:30:43]  Running db communication command [select username,name,acc from account]
+ [8-Feb-2024 20:30:44]  [8-Feb-2024 20:30:44] CONNECTED TO SERVER VIA SSH TO RUN COMMANDS ['ip hotspot user print detail where name="9999"', 'ip hotspot user print detail where name="cliff1"', 'ip hotspot user print detail where name="674206"', 'ip hotspot user print detail where name="Grace"', 'ip hotspot user print detail where name="ken"', 'ip hotspot user print detail where name="peninah"', 'ip hotspot user print detail where name="26996"', 'ip hotspot user print detail where name="Lewis"', 'ip hotspot user print detail where name="Brian"', 'ip hotspot user print detail where name="Kelvin"', 'ip hotspot user print detail where name="Nutshell"', 'ip hotspot user print detail where name="Dulcis"', 'ip hotspot user print detail where name="Dandenno"', 'ip hotspot user print detail where name="Stony3605"', 'ip hotspot user print detail where name="Kamikaze"', 'ip hotspot user print detail where name="Ruth"']
+ [8-Feb-2024 20:30:45]  ERROR CONFIRMING SESSION STATUS FOR ken
+ [8-Feb-2024 20:30:45]  ERROR CONFIRMING SESSION STATUS FOR Purity Wang'ombe
+ [8-Feb-2024 20:30:45]  RUNNING AUTO SESSION MONITOR.SERVICE.
+ [8-Feb-2024 20:30:45]  Next disconnection 2024-02-09 10:38:00
+ [9-Feb-2024 11:40:06]  _hermes_service WINGU SERVICE STARTUP PROCESS...
+ [9-Feb-2024 11:40:06]  RUNNING SESSION MONITOR
+ [9-Feb-2024 11:40:06]  SESSION EXPIRED FOR peninah[WnWp5502].
+ [9-Feb-2024 11:40:06]  UPDATE sessions SET status = "expired" WHERE acc = "WnWp5502"
+ [9-Feb-2024 11:40:07]  [9-Feb-2024 11:40:07] CONNECTED TO SERVER VIA SSH TO RUN COMMANDS ['ip hotspot user set "peninah" limit-uptime=1s', 'ip hotspot active remove [find name="peninah"]']
+ [9-Feb-2024 11:40:07]  [9-Feb-2024 11:40:07]  USER peninah DISCONTINUED FROM CONNECTION
+ [9-Feb-2024 11:40:07]  Running db communication command [select username,name,acc from account]
+ [9-Feb-2024 11:40:08]  [9-Feb-2024 11:40:08] CONNECTED TO SERVER VIA SSH TO RUN COMMANDS ['ip hotspot user print detail where name="9999"', 'ip hotspot user print detail where name="cliff1"', 'ip hotspot user print detail where name="674206"', 'ip hotspot user print detail where name="Grace"', 'ip hotspot user print detail where name="ken"', 'ip hotspot user print detail where name="peninah"', 'ip hotspot user print detail where name="26996"', 'ip hotspot user print detail where name="Lewis"', 'ip hotspot user print detail where name="Brian"', 'ip hotspot user print detail where name="Kelvin"', 'ip hotspot user print detail where name="Nutshell"', 'ip hotspot user print detail where name="Dulcis"', 'ip hotspot user print detail where name="Dandenno"', 'ip hotspot user print detail where name="Stony3605"', 'ip hotspot user print detail where name="Kamikaze"', 'ip hotspot user print detail where name="Ruth"']
+ [9-Feb-2024 11:40:09]  ERROR CONFIRMING SESSION STATUS FOR ken
+ [9-Feb-2024 11:40:09]  RUNNING AUTO SESSION MONITOR.SERVICE.
+ [9-Feb-2024 11:40:09]  Next disconnection 2024-02-09 20:29:00
+ [9-Feb-2024 12:49:04]  _hermes_service WINGU SERVICE STARTUP PROCESS...
+ [9-Feb-2024 12:49:05]  RUNNING SESSION MONITOR
+ [9-Feb-2024 12:49:05]  Running db communication command [select username,name,acc from account]
+ [9-Feb-2024 12:49:05]  [9-Feb-2024 12:49:05] CONNECTED TO SERVER VIA SSH TO RUN COMMANDS ['ip hotspot user print detail where name="9999"', 'ip hotspot user print detail where name="cliff1"', 'ip hotspot user print detail where name="674206"', 'ip hotspot user print detail where name="Grace"', 'ip hotspot user print detail where name="ken"', 'ip hotspot user print detail where name="peninah"', 'ip hotspot user print detail where name="26996"', 'ip hotspot user print detail where name="Lewis"', 'ip hotspot user print detail where name="Brian"', 'ip hotspot user print detail where name="Kelvin"', 'ip hotspot user print detail where name="Nutshell"', 'ip hotspot user print detail where name="Dulcis"', 'ip hotspot user print detail where name="Dandenno"', 'ip hotspot user print detail where name="Stony3605"', 'ip hotspot user print detail where name="Kamikaze"', 'ip hotspot user print detail where name="Ruth"']
+ [9-Feb-2024 12:49:06]  ERROR CONFIRMING SESSION STATUS FOR ken
+ [9-Feb-2024 12:49:06]  RUNNING AUTO SESSION MONITOR.SERVICE.
+ [9-Feb-2024 12:49:06]  Next disconnection 2024-02-09 20:29:00
+ [9-Feb-2024 17:45:31]  _hermes_service WINGU SERVICE STARTUP PROCESS...
+ [9-Feb-2024 17:45:31]  RUNNING SESSION MONITOR
+ [9-Feb-2024 17:45:31]  Running db communication command [select username,name,acc from account]
+ [9-Feb-2024 17:45:32]  [9-Feb-2024 17:45:32] CONNECTED TO SERVER VIA SSH TO RUN COMMANDS ['ip hotspot user print detail where name="9999"', 'ip hotspot user print detail where name="cliff1"', 'ip hotspot user print detail where name="674206"', 'ip hotspot user print detail where name="Grace"', 'ip hotspot user print detail where name="ken"', 'ip hotspot user print detail where name="peninah"', 'ip hotspot user print detail where name="26996"', 'ip hotspot user print detail where name="Lewis"', 'ip hotspot user print detail where name="Brian"', 'ip hotspot user print detail where name="Kelvin"', 'ip hotspot user print detail where name="Nutshell"', 'ip hotspot user print detail where name="Dulcis"', 'ip hotspot user print detail where name="Dandenno"', 'ip hotspot user print detail where name="Stony3605"', 'ip hotspot user print detail where name="Kamikaze"', 'ip hotspot user print detail where name="Ruth"']
+ [9-Feb-2024 17:45:33]  ERROR CONFIRMING SESSION STATUS FOR ken
+ [9-Feb-2024 17:45:33]  ERROR CONFIRMING SESSION STATUS FOR dorcas luseno
+ [9-Feb-2024 17:45:33]  RUNNING AUTO SESSION MONITOR.SERVICE.
+ [9-Feb-2024 17:45:33]  Next disconnection 2024-02-09 20:29:00
+ [9-Feb-2024 20:29:01]  Internal system interupt. Exiting monitor.service to check active sessions...
+ [9-Feb-2024 20:29:01]  RUNNING SESSION MONITOR
+ [9-Feb-2024 20:29:01]  SESSION EXPIRED FOR Brian Mwaniki[WnWp5508].
+ [9-Feb-2024 20:29:01]  UPDATE sessions SET status = "expired" WHERE acc = "WnWp5508"
+ [9-Feb-2024 20:29:01]  [9-Feb-2024 20:29:01] CONNECTED TO SERVER VIA SSH TO RUN COMMANDS ['ip hotspot user set "Brian" limit-uptime=1s', 'ip hotspot active remove [find name="Brian"]']
+ [9-Feb-2024 20:29:02]  [9-Feb-2024 20:29:02]  USER Brian Mwaniki DISCONTINUED FROM CONNECTION
+ [9-Feb-2024 20:29:02]  RUNNING AUTO SESSION MONITOR.SERVICE.
+ [9-Feb-2024 20:29:02]  Next disconnection 2024-02-09 20:39:00
+ [9-Feb-2024 20:39:02]  Internal system interupt. Exiting monitor.service to check active sessions...
+ [9-Feb-2024 20:39:02]  RUNNING SESSION MONITOR
+ [9-Feb-2024 20:39:02]  SESSION EXPIRED FOR pauline Otieno[WnWp5503].
+ [9-Feb-2024 20:39:02]  UPDATE sessions SET status = "expired" WHERE acc = "WnWp5503"
+ [9-Feb-2024 20:39:02]  [9-Feb-2024 20:39:02] CONNECTED TO SERVER VIA SSH TO RUN COMMANDS ['ip hotspot user set "674206" limit-uptime=1s', 'ip hotspot active remove [find name="674206"]']
+ [9-Feb-2024 20:39:03]  [9-Feb-2024 20:39:03]  USER pauline Otieno DISCONTINUED FROM CONNECTION
+ [9-Feb-2024 20:39:03]  RUNNING AUTO SESSION MONITOR.SERVICE.
+ [9-Feb-2024 20:39:03]  Next disconnection 2024-02-09 20:40:00
+ [9-Feb-2024 20:40:00]  Internal system interupt. Exiting monitor.service to check active sessions...
+ [9-Feb-2024 20:40:00]  RUNNING SESSION MONITOR
+ [9-Feb-2024 20:40:00]  SESSION EXPIRED FOR Purity Wang'ombe[WnWp5515].
+ [9-Feb-2024 20:40:00]  UPDATE sessions SET status = "expired" WHERE acc = "WnWp5515"
+ [9-Feb-2024 20:40:00]  [9-Feb-2024 20:40:00] CONNECTED TO SERVER VIA SSH TO RUN COMMANDS ['ip hotspot user set "Stony3605" limit-uptime=1s', 'ip hotspot active remove [find name="Stony3605"]']
+ [9-Feb-2024 20:40:00]  [9-Feb-2024 20:40:00]  USER Purity Wang'ombe DISCONTINUED FROM CONNECTION
+ [9-Feb-2024 20:40:01]  RUNNING AUTO SESSION MONITOR.SERVICE.
+ [9-Feb-2024 20:40:01]  Next disconnection 2024-02-10 16:32:00

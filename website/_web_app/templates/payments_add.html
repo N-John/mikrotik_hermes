@@ -1,0 +1,41 @@
+{%load static%}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="{% static 'style.css' %}">
+<title>Payment Input</title>
+
+</head>
+<body class="dark">
+  <h2><a href="/">WIRED NETWORKING</a></h2>
+  <h1>Payment Input</h1>
+  <form class="wrap animated" action="verify" method="post">
+    {% csrf_token %}
+
+    <label for="username">Username:</label>
+    <input type="text" id="payment_username" name="username" placeholder="John Doe">
+
+    <label for="source">Source/contact:</label>
+    <input type="text" id="source" name="source" placeholder="07********">
+    
+    <label for="transaction_code">Transaction Code</label>
+    <input type="text" id="transaction_code" name="transaction_code" placeholder="S********">
+
+    <label for="amount">Amount:</label>
+    <input type="number" id="payment_amount" name="amount" style="background-color: #3e4d59; color: #fff; border: 0; width: 100%; height: 44px; border-radius: 6px;">
+    
+    <label for="date">Date:</label>
+    <input type="date" id="payment_date" name="date" style="background-color: #3e4d59; color: #fff; border: 0; width: 100%; height: 44px; border-radius: 6px;"><br><br>
+
+    <label for="time">Time:</label>
+    <input type="time" id="time" name="time" style="background-color: #3e4d59; color: #fff; border: 0; width: 100%; height: 44px; border-radius: 6px;"><br><br>
+
+
+    
+    <input type="submit" id="payment_submit_btn" value="Submit">
+  </form>
+</body>
+</html>

@@ -1,0 +1,34 @@
+{%load static%}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="{% static 'style.css' %}">
+<title>User Payment History</title>
+</head>
+<body class="dark">
+  <h2><a href="/">WIRED NETWORKING</a></h2>
+  <h1>User Payment History</h1>
+  <table>
+    <tr>
+      <th>pid</th>
+      <th>Account</th>
+      <th>Source</th>
+      <th>Payment Amount</th>
+      <th>Date</th>
+    </tr>
+      <!-- Repeat this row for each payment -->
+      {% for payment in all_payments %}
+      <tr>
+        <td>{{ payment.pid }}</td>
+        <td>{{ payment.acc }}</td>
+        <td>{{ payment.source }}</td>
+        <td>{{ payment.amount }}</td>
+        <td>{{ payment.date }}</td>
+      </tr>
+      {% endfor %}
+  </table>
+</body>
+</html>
