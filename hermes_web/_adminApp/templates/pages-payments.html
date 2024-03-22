@@ -1,0 +1,95 @@
+{% extends 'base_temp.html' %}
+{% load static%}
+{% load humanize %}
+{% block content %}
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Payment</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+  
+          <li class="breadcrumb-item active">Payment</li>
+          <li class="breadcrumb-item active">Add</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Payment Input Form</h5>
+
+          <!-- Horizontal Form -->
+          <form method="post" action="/payments/input/submit">
+            {% csrf_token %}
+            <div class="row mb-3">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Account No</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="inputText" name="account_no" value="{{account_no}}">
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Code</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="inputText" name="pay_code">
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Amount</label>
+              <div class="col-sm-10">
+                <input type="number" class="form-control" id="inputNumber" name="pay_amount">
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Source</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="inputText" name="pay_source">
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Date</label>
+              <div class="col-sm-10">
+                <input type="date" class="form-control" id="inputDate" name="pay_date">
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Time</label>
+              <div class="col-sm-10">
+                <input type="time" class="form-control" id="inputTime" name="pay_time">
+              </div>
+            </div>
+
+
+            <fieldset class="row mb-3">
+              <legend class="col-form-label col-sm-2 pt-0">If no active session...</legend>
+              <div class="col-sm-10">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="CurrentTime" checked>
+                  <label class="form-check-label" for="gridRadios1">
+                    Start session at Current time
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="PaymentTime" disabled>
+                  <label class="form-check-label" for="gridRadios2">
+                    Start session at Payment time
+                  </label>
+                </div>
+               
+              </div>
+            </fieldset>
+            
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary">Submit</button>
+              <button type="reset" class="btn btn-secondary">Reset</button>
+            </div>
+          </form><!-- End Horizontal Form -->
+
+        </div>
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+  {% endblock %}

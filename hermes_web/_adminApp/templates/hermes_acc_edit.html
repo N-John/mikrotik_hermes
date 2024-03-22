@@ -1,0 +1,200 @@
+{% extends 'base_temp.html' %}
+{% load static%}
+{% load humanize %}
+{% block content %}
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Account</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item">Pages</li>
+          <li class="breadcrumb-item active">account</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">{{name}} [{{acc}}]</h5>
+
+        <!-- Custom Styled Validation -->
+        <form class="row g-3 needs-validation" method='post' action="/accounts/account" novalidate>
+          {% csrf_token %} 
+          <div class="col-md-4">
+            <label for="validationCustom01" class="form-label">Name</label>
+            <input type="text" class="form-control" id="validationCustom01" name="account_edit_name" value="{{name}}" required>
+          </div>
+
+          <div class="col-md-4">
+            <label for="validationCustom02" class="form-label">Username</label>
+            <input type="text" class="form-control" id="validationCustom02" name="account_edit_username" value="{{username}}" required>
+          </div>
+
+          <div class="col-md-4">
+              <label for="validationCustomUsername" class="form-label">Password</label>
+              <div class="input-group has-validation">
+                <input type="text" class="form-control" id="validationCustomPassword" aria-describedby="inputGroupPrepend" name="account_edit_password" value="{{password}}" required>
+                <div class="invalid-feedback">
+                  Password should be between 8-16 charactest.
+                </div>
+              </div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="validationCustomUsername" class="form-label">Phone</label>
+            <div class="input-group has-validation">
+              <input type="number" class="form-control" id="validationCustomPhone" aria-describedby="inputGroupPrepend" name="account_edit_phone" value="{{phone}}" required>
+              <div class="invalid-feedback">
+                Please Enter a valid phone number.
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <label for="validationCustom04" class="form-label">Package</label>
+            <select class="form-select" id="validationCustom04" name="account_edit_package" required>
+              <option selected disabled value="{{package}}">{{package}}</option>
+              {%for popt in pkg_options%}
+              <option>{{popt.name}}</option>
+              {%endfor%}
+
+            </select>
+            <div class="invalid-feedback">
+              Please select a valid Package.
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="validationCustomUsername" class="form-label">Balance</label>
+            <div class="input-group has-validation">
+              <input type="number" class="form-control" id="validationCustomPhone" aria-describedby="inputGroupPrepend" name="account_edit_balance" value="{{balance}}" readonly>
+            </div>
+          </div>
+            <input type="hidden" name="acc_nmb" value='{{acc}}' readonly>
+
+          <div class="col-12">
+            <button class="btn btn-primary" type="submit">Edit account data </button>
+          </div>
+        </form><!-- End Custom Styled Validation -->
+
+      </div>
+    </div>
+
+    <!-- Card with header and footer -->
+    <div class="card">
+      <div class="card-header">Payment</div>
+      <div class="card-body">
+        <h4 class="card-title">TOTAL INCOME: </h4>
+        <h4 class="card-title">PAYMENT METHORD: M-pesa</h4>
+        <button type="button" class="btn btn-outline-success" ><a href="/payments/input?account={{acc}}">Make Payment</a></button>
+      </div>
+  
+    </div><!-- End Card with header and footer -->
+
+
+    
+    <!-- USER sessions -->
+        <section class="section">
+          <div class="row">
+          <div class="col-lg-12">
+        <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{name}} Sessions <span>| Today</span></h5>
+
+          <table class="table datatable">
+            <thead>
+              <tr>
+                <th><b>#</b></th>
+                <th>Acc</th>
+                <th>Profile</th>
+                <th>Start Date</th>
+                <th>Start Time</th>
+                <th>End Date</th>
+                <th>End Time</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {%for ses in sessions%}
+              <tr>
+                
+                <th scope="row"><a href="#">#{{ses.sid}}</a></th>
+                <td><a href="#" class="text-primary">{{ses.acc}}</a></td>
+                <td>{{ses.profile}}</td>
+                <td>{{ses.startDate}}</td>
+                <td>{{ses.startTime}}</td>
+                <td>{{ses.endDate}}</td>
+                <td>{{ses.endTime}}</td>
+                {%if ses.status == 'expired' %}
+                <td><span class="badge bg-warning">{{ses.status}}</span></td>
+                {%elif ses.status == 'active' %}
+                <td><span class="badge bg-success">{{ses.status}}</span></td>
+                {%else%}
+                <td><span class="badge bg-secondary">{{ses.status}}</span></td>
+                {%endif%}
+                
+              </tr>
+              {%endfor%}
+              
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+      </div>
+    </div><!-- End Recent Sessions -->
+
+
+
+    
+    <!-- Recent Finances -->
+    <div class="col-12">
+      <div class="card recent-sales overflow-auto">
+
+
+        <div class="card-body">
+          <h5 class="card-title">{{name}} Finances <span>| Today</span></h5>
+
+          <table class="table table-borderless datatable">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Acc</th>
+                <th scope="col">Money In</th>
+                <th scope="col">Money Out</th>
+                <th scope="col">Description</th>
+                <th scope="col">Date</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {%for fin_hist in finances%}
+              <tr>
+                
+                <th scope="row"><a href="#">#{{fin_hist.fid}}</a></th>
+                <td><a href="#" class="text-primary">{{fin_hist.acc}}</a></td>
+                <td>{{fin_hist.moneyIn}}</td>
+                <td>{{fin_hist.moneyOut}}</td>
+                <td>{{fin_hist.description}}</td>
+                <td>{{fin_hist.date}}</td>
+                {%if fin_hist.moneyIn == 0 %}
+                <td><span class="badge bg-primary">Withdrowal</span></td>
+                {%elif fin_hist.moneyOut == 0%}
+                <td><span class="badge bg-success">Deposit</span></td>
+                {%endif%}
+                
+              </tr>
+              {%endfor%}
+              
+            </tbody>
+          </table>
+
+        </div>
+
+      </div>
+    </div><!-- End Recent Finances -->
+
+  </main><!-- End #main -->
+  {% endblock %}

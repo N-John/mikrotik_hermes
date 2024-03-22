@@ -1,0 +1,183 @@
+{% extends 'base_temp.html' %}
+{% load static%}
+{% load humanize %}
+{% block content %}
+  <main id="main" class="main">
+    {%if session_creation == "created" %}
+    <div class="alert alert-success bg-success text-light border-0 alert-dismissible fade show" role="alert">
+      SUCCESFULLY CREATED NEW SESSION
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {%elif session_creation == "existed" %}
+    <div class="alert alert-secondary bg-secondary text-light border-0 alert-dismissible fade show" role="alert">
+      User already has an active session!
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {%elif session_creation == "insufficient" %}
+    <div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show" role="alert">
+      Insufficient funds to create new session!
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+
+    <div class="pagetitle">
+      <h1>Payment Confirmation</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="dashboard">Home</a></li>
+          <li class="breadcrumb-item active">Dashboard</li>
+          <li class="breadcrumb-item active">Payment</li>
+          <li class="breadcrumb-item active">Confirmation</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section dashboard">
+    
+      <div class="row">
+
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Payment Details</h5>
+    
+            <!-- Custom Styled Validation -->
+            <form class="row g-3 needs-validation" novalidate >
+              <div class="col-md-4">
+                <label for="validationCustom01" class="form-label">TRANSACTION CODE</label>
+                <input type="text" class="form-control" id="validationCustom01" name="account_edit_name" value="{{transcode}}" readonly>
+              </div>
+    
+              <div class="col-md-4">
+                <label for="validationCustom02" class="form-label">AMOUNT</label>
+                <input type="text" class="form-control" id="validationCustom02" name="account_edit_username" value="{{transamount}}" readonly>
+              </div>
+    
+              <div class="col-md-4">
+                  <label for="validationCustomUsername" class="form-label">DATE</label>
+                  <div class="input-group has-validation">
+                    <input type="email" class="form-control" id="validationCustomPassword" aria-describedby="inputGroupPrepend" name="account_edit_password" value="{{transdate}}" readonly>
+                  </div>
+              </div>
+
+              <div class="col-md-4">
+                <label for="validationCustomUsername" class="form-label">TIME</label>
+                <div class="input-group has-validation">
+                  <input type="email" class="form-control" id="validationCustomPassword" aria-describedby="inputGroupPrepend" name="account_edit_password" value="{{transtime}}" readonly>
+                </div>
+              </div>
+
+              
+            </form><!-- End Custom Styled Validation -->
+    
+          </div>
+
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">User Details</h5>
+    
+            <!-- Custom Styled Validation -->
+            <form class="row g-3 needs-validation" novalidate >
+              <div class="col-md-4">
+                <label for="validationCustom01" class="form-label">Account</label>
+                <input type="text" class="form-control" id="validationCustom01" name="account_edit_name" value="{{transacc}}" readonly>
+              </div>
+    
+              <div class="col-md-4">
+                <label for="validationCustom02" class="form-label">Name</label>
+                <input type="text" class="form-control" id="validationCustom02" name="account_edit_username" value="{{transname}}" readonly>
+              </div>
+    
+              <div class="col-md-4">
+                  <label for="validationCustomUsername" class="form-label">Package</label>
+                  <div class="input-group has-validation">
+                    <input type="email" class="form-control" id="validationCustomPassword" aria-describedby="inputGroupPrepend" name="account_edit_password" value="{{transpkg}}" readonly>
+                  </div>
+              </div>
+
+              <div class="col-md-4">
+                <label for="validationCustomUsername" class="form-label">Username</label>
+                <div class="input-group has-validation">
+                  <input type="email" class="form-control" id="validationCustomPassword" aria-describedby="inputGroupPrepend" name="account_edit_password" value="{{transusrname}}" readonly>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <label for="validationCustomUsername" class="form-label">Balance</label>
+                <div class="input-group has-validation">
+                  <input type="email" class="form-control" id="validationCustomPassword" aria-describedby="inputGroupPrepend" name="account_edit_password" value="{{transusrbal}}" readonly>
+                </div>
+              </div>
+            </form><!-- End Custom Styled Validation -->
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Finance Details</h5>
+    
+            <!-- Custom Styled Validation -->
+            <form class="row g-3 needs-validation" novalidate >
+              <div class="col-md-4">
+                <label for="validationCustom01" class="form-label">Finance Id</label>
+                <input type="text" class="form-control" id="validationCustom01" name="account_edit_name" value="{{transfid}}" readonly>
+              </div>
+    
+              <div class="col-md-4">
+                <label for="validationCustom02" class="form-label">Account</label>
+                <input type="text" class="form-control" id="validationCustom02" name="account_edit_username" value="{{facc}}" readonly>
+              </div>
+    
+              <div class="col-md-4">
+                  <label for="validationCustomUsername" class="form-label">Money In</label>
+                  <div class="input-group has-validation">
+                    <input type="email" class="form-control" id="validationCustomPassword" aria-describedby="inputGroupPrepend" name="account_edit_password" value="{{fmin}}" readonly>
+                  </div>
+              </div>
+
+              <div class="col-md-4">
+                <label for="validationCustomUsername" class="form-label">Money Out</label>
+                <div class="input-group has-validation">
+                  <input type="email" class="form-control" id="validationCustomPassword" aria-describedby="inputGroupPrepend" name="account_edit_password" value="{{fmout}}" readonly>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <label for="validationCustomUsername" class="form-label">Date</label>
+                <div class="input-group has-validation">
+                  <input type="email" class="form-control" id="validationCustomPassword" aria-describedby="inputGroupPrepend" name="account_edit_password" value="{{fdate}}" readonly>
+                </div>
+              </div>
+            </form><!-- End Custom Styled Validation -->
+          </div>
+        </div>
+
+
+
+        <!-- Left side columns -->
+        <div class="col-lg-8">
+          <div class="row">
+
+            <div class="card">
+              <div class="card-body">
+
+                <div class="d-grid gap-2 mt-3">
+                  
+                  <button class="btn btn-success" type="button" ><a href="/accounts/account?account={{transacc}}">Continue</a></button>
+                </div>
+  
+              </div>
+            </div>
+
+
+
+          </div>
+        </div><!-- End Left side columns -->
+
+
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+  {% endblock %}

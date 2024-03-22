@@ -1,0 +1,186 @@
+{% extends 'base_temp.html' %}
+{% load static%}
+{% load humanize %}
+{% block content %}
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Users</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'dashboard'%}">Home</a></li>
+          <li class="breadcrumb-item">Users</li>
+          <li class="breadcrumb-item active">Accounts</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <div class="col-lg-8">
+
+    <div class="row">
+    <div class="col-xxl-4 col-md-6">
+      <div class="card info-card sales-card">
+        
+
+        <div class="filter">
+          <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+            <li class="dropdown-header text-start">
+              <h6>Filter</h6>
+            </li>
+
+            <li><a class="dropdown-item" href="/?filter=Today">Today</a></li>
+            <li><a class="dropdown-item" href="?filter=ThisMonth">This Month</a></li>
+            <li><a class="dropdown-item" href="?filter=ThisYear">This Year</a></li>
+
+          </ul>
+        </div>
+
+        <div class="card-body">
+          <h5 class="card-title"><a href="#pppoe_table">PPPoE USERS</a></h5>
+
+          <div class="d-flex align-items-center">
+            <div class="ps-3">
+              <h4>{{ pppoe_user_count|intcomma }} users</h4>
+              <a href="{% url 'accountAdd' %}?ptype=pppoe"><button type="button" class="btn btn-info rounded-pill">Add User</button></a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+<!-- Revenue Card -->
+<div class="col-xxl-4 col-md-6">
+  <div class="card info-card revenue-card">
+
+    <div class="filter">
+      <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+      <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+        <li class="dropdown-header text-start">
+          <h6>Filter</h6>
+        </li>
+
+        <li><a class="dropdown-item" href="?filter=Today">Today</a></li>
+        <li><a class="dropdown-item" href="?filter=ThisMonth">This Month</a></li>
+        <li><a class="dropdown-item" href="?filter=ThisYear">This Year</a></li>
+      </ul>
+    </div>
+
+    <div class="card-body">
+      <h5 class="card-title"><a href="#hotspot_table">Hotspot Users</a></h5>
+        <div class="ps-3">
+          <h4>{{hotspot_users_count|intcomma}} Users</h4>
+          <a href="{% url 'accountAdd' %}?ptype=hotspot"><button type="button" class="btn btn-info rounded-pill">Add User</button></a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div><!-- End Revenue Card -->
+  </div>
+  </div>
+    <section >
+    <div class="card">
+        <div class="card-body" >
+          <h5 class="card-title" id="hotspot_table"> Hotspot Users</h5>
+
+          <!-- Table with howtspot rows -->
+          <table class="table table-hover datatable">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Acc</th>
+                <th scope="col">Name</th>
+                <th scope="col">Contact</th>
+                <th scope="col">Package</th>
+                <th scope="col">Username</th>
+                <th scope="col">Password</th>
+                
+                <th scope="col">Install Date</th>
+                <th scope="col">Balance</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+              {%for user in acc_data%}
+          
+              <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td><a href="accounts/account?type=hotspot&account={{user.acc}}">{{user.acc}}</a></td>
+                <td>{{user.name}}</td>
+                <td>{{user.phone}}</td>
+                <td>{{user.package}}</td>
+                <td>{{user.username}}</td>
+                <td>{{user.password}}</td>
+                <td>{{user.install_date}}</td>
+                <td>{{user.balance}}</td>
+              
+              </tr>
+              {%endfor%}
+              
+            </tbody>
+          </table>
+          <!-- End Table with hoverable rows -->
+
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="card" >
+          <div class="card-body" >
+            <h5 class="card-title" id = 'pppoe_table'> PPPoE USERS</h5>
+  
+            <!-- Table with hoverable rows -->
+            <table class="table table-hover datatable">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Acc</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Contact</th>
+                  <th scope="col">Location</th>
+                  <th scope="col">Ip</th>                  
+                  <th scope="col">Username</th>
+                  <th scope="col">Password</th>
+                  <th scope="col">Install Date</th>
+                  <th scope="col">Package</th>
+                  <th scope="col">Balance</th>
+                </tr>
+              </thead>
+              <tbody>
+                
+                {%for puser in pppoe_acc_data%}
+            
+                <tr>
+                  <th scope="row">{{ forloop.counter }}</th>
+                  <td><a href="accounts/account?type=pppoe&account={{puser.acc}}">{{puser.acc}}</a></td>
+                  <td>{{puser.name}}</td>
+                  <td>{{puser.phone}}</td>
+                  <td>{{puser.location}}</td>
+                  <td>{{puser.ip}}</td>
+                  
+                  <td>{{puser.username}}</td>
+                  <td>{{puser.password}}</td>
+                  <td>{{puser.install_date}}</td>
+                  <td>{{puser.package}}</td>
+                  <td>{{puser.balance}}</td>
+                
+                </tr>
+                {%endfor%}
+                
+              </tbody>
+            </table>
+            <!-- End Table with hoverable rows -->
+  
+          </div>
+        </div>
+      </section>
+
+
+    
+      
+
+  </main><!-- End #main -->
+  {% endblock %}

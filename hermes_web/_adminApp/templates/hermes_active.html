@@ -1,0 +1,132 @@
+{% extends 'base_temp.html' %}
+{% load static%}
+{% load humanize %}
+{% block content %}
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Sessions</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'dashboard'%}">Home</a></li>
+          <li class="breadcrumb-item">Users</li>
+          <li class="breadcrumb-item active">Sessions</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Active Sessions</h5>
+              <p>Total Active Sessions: {{total_act}}</p>
+
+              <!-- Table with stripped rows -->
+              <table class="table table-hover datatable">
+                <thead>
+                  <tr>
+                    <th>
+                      <b>#</b>
+                    </th>
+                    <th>Acc.</th>
+                    <th>Package</th>
+                    <th data-type="date" data-format="YYYY/DD/MM">Start Date</th>
+                    <th data-type="time" data-format="HH:MM PM">Start Time</th>
+                    <th data-type="date" data-format="YYYY/DD/MM">End Date</th>
+                    <th data-type="time" data-format="HH:MM PM">End time</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {%for act_session in active_session%}
+                  <tr>
+                    <td>{{act_session.sid}}</td>
+                    <td><a href="/accounts/account?account={{act_session.acc}}">{{act_session.acc}}</a></td>
+                    <td>{{act_session.profile}}</td>
+                    <td>{{act_session.startDate}}</td>
+                    <td>{{act_session.startTime}}</td>
+                    <td>{{act_session.endDate}}</td>
+                    <td>{{act_session.endTime}}</td>
+                    {%if act_session.status == "active"%}
+                      <td><span class="badge rounded-pill bg-success">Active</span></td>
+                    {%elif act_session.status == "expired" %}
+                      <td><span class="badge rounded-pill bg-danger">Expired</span></td>
+                    {%else%}
+                    <td><span class="badge rounded-pill bg-warning text-dark">{{act_session.status}}</span></td>
+                    {%endif%}
+                  </tr>
+                  {%endfor%}
+            
+                </tbody>
+              </table>
+              <!-- End Table with stripped rows -->
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Sessions History</h5>
+              <p> {{total_hist}} Total recorded sessions</p>
+
+              <!-- Table with stripped rows -->
+              <table class="table table-hover datatable">
+                <thead>
+                  <tr>
+                    <th>
+                      <b>#</b>
+                    </th>
+                    <th>Acc.</th>
+                    <th>Package</th>
+                    <th data-type="date" data-format="YYYY/DD/MM">Start Date</th>
+                    <th data-type="time" data-format="HH:MM PM">Start Time</th>
+                    <th data-type="date" data-format="YYYY/DD/MM">End Date</th>
+                    <th data-type="time" data-format="HH:MM PM">End time</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {%for session in session_data%}
+                  <tr>
+                    <td>{{session.sid}}</td>
+                    <td>{{session.acc}}</td>
+                    <td>{{session.profile}}</td>
+                    <td>{{session.startDate}}</td>
+                    <td>{{session.startTime}}</td>
+                    <td>{{session.endDate}}</td>
+                    <td>{{session.endTime}}</td>
+                    {%if session.status == "active"%}
+                      <td><span class="badge rounded-pill bg-success">Active</span></td>
+                    {%elif session.status == "expired" %}
+                      <td><span class="badge rounded-pill bg-danger">Expired</span></td>
+                    {%else%}
+                    <td><span class="badge rounded-pill bg-warning text-dark">{{session.status}}</span></td>
+                    {%endif%}
+                  </tr>
+                  {%endfor%}
+            
+                </tbody>
+              </table>
+              <!-- End Table with stripped rows -->
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+  {% endblock %}

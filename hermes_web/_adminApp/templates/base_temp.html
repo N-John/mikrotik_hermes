@@ -1,0 +1,318 @@
+{% load static%}
+{% load humanize %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Hermes Connect</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="{% static '/img/favicon.png' %}" rel="icon">
+  <link href="{% static '/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static '/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static '/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static '/vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
+  <link href="{% static '/vendor/quill/quill.snow.css' %}" rel="stylesheet">
+  <link href="{% static '/vendor/quill/quill.bubble.css' %}" rel="stylesheet">
+  <link href="{% static '/vendor/remixicon/remixicon.css' %}" rel="stylesheet">
+  <link href="{% static '/vendor/simple-datatables/style.css' %}" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="{% static '/css/style.css' %}" rel="stylesheet">
+
+</head>
+  <!-- =======================================================
+  * Template Name: NiceAdmin
+  * Updated: Jan 29 2024 with Bootstrap v5.3.2
+  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="header fixed-top d-flex align-items-center">
+
+    <div class="d-flex align-items-center justify-content-between">
+      <a href="{% url 'dashboard' %}" class="logo d-flex align-items-center">
+        <img src="{% static '/img/logo.png' %}" alt="">
+        <span class="d-none d-lg-block">Hermes</span>
+      </a>
+      <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div><!-- End Logo -->
+
+    <div class="search-bar">
+      <form class="search-form d-flex align-items-center" method="POST" action="#">
+        <input type="text" name="query" placeholder="Search" title="Enter search keyword">
+        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+      </form>
+    </div><!-- End Search Bar -->
+
+    <nav class="header-nav ms-auto">
+      <ul class="d-flex align-items-center">
+
+        <li class="nav-item d-block d-lg-none">
+          <a class="nav-link nav-icon search-bar-toggle " href="#">
+            <i class="bi bi-search"></i>
+          </a>
+        </li><!-- End Search Icon-->
+
+        <li class="nav-item dropdown">
+
+          <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+            <i class="bi bi-bell"></i>
+            {% if notifications|length >= 1 %}
+            <span class="badge bg-primary badge-number">{{notifications | length }}</span>
+            {%endif%}
+          </a><!-- End notifications Icon -->
+
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+            <li class="dropdown-header">
+              You have {{notifications|length}} new notifications
+              <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+
+            {% for key, notif_dict in notifications.items %}
+            <li class="notification-item">
+                {% if notif_dict.type == "warning" %}
+                    <i class="bi bi-exclamation-circle text-warning"></i>
+                {% elif notif_dict.type == "danger" %}
+                    <i class="bi bi-x-circle text-danger"></i>
+                {% elif notif_dict.type == "success" %}
+                    <i class="bi bi-check-circle text-success"></i>
+                {% else %}
+                    <i class="bi bi-info-circle text-primary"></i>
+                {% endif %}
+                <div>
+                    <h4>{{ notif_dict.topic }}</h4>
+                    <p>{{ notif_dict.message }}</p>
+                </div>
+            </li>
+            {% endfor %}
+
+          </ul><!-- End notifications Dropdown Items -->
+
+        </li><!-- End notifications Nav -->
+
+        <li class="nav-item dropdown">
+
+          <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+            <i class="bi bi-chat-left-text"></i>
+            {% if messages|length >= 1%}
+            <span class="badge bg-success badge-number">{{ messages|length }}</span>
+
+            {%endif%}
+          </a><!-- End Messages Icon -->
+
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages">
+            <li class="dropdown-header">
+              You have {{messages|length}} new messages
+              <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            
+            {% for key, mess_dict in messages.items %}
+            <li class="message-item">
+                <a href="#">
+                    <div>
+                        <h4>{{ mess_dict.name }}</h4>
+                        <p>{{ mess_dict.message }}</p>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+            {% endfor %}
+
+
+          </ul><!-- End Messages Dropdown Items -->
+
+        </li><!-- End Messages Nav -->
+
+        <li class="nav-item dropdown pe-3">
+
+          <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            <img src="{% static '/img/profile-img.jpg' %}" alt="Profile" class="rounded-circle">
+            <span class="d-none d-md-block dropdown-toggle ps-2">{{ name.split|slice:"-1" }}</span>
+          </a><!-- End Profile Iamge Icon -->
+
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+            <li class="dropdown-header">
+              <h6>{{adminName}}</h6>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="#">
+                <i class="bi bi-person"></i>
+                <span>My Profile</span>
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="#">
+                <i class="bi bi-gear"></i>
+                <span>Account Settings</span>
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="{% url 'logout' %}">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Sign Out</span>
+              </a>
+            </li>
+
+          </ul><!-- End Profile Dropdown Items -->
+        </li><!-- End Profile Nav -->
+
+      </ul>
+    </nav><!-- End Icons Navigation -->
+
+  </header><!-- End Header -->
+
+  <!-- ======= Sidebar ======= -->
+  <aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+  
+      <li class="nav-item">
+        <a class="nav-link " href="{% url 'dashboard' %}">
+          <i class="bi bi-grid"></i>
+          <span>Dashboard</span>
+        </a>
+      </li>
+  
+      <li class="nav-item">
+        <a class="nav-link " href="{% url 'account' %}">
+          <i class="bi bi-grid"></i>
+          <span>Account</span>
+        </a>
+      </li>
+  
+      <li class="nav-item">
+        <a class="nav-link " href="{% url 'sessions' %}">
+          <i class="bi bi-grid"></i>
+          <span>Sessions</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link " href="{% url 'packages' %}">
+          <i class="bi bi-grid"></i>
+          <span>Packages</span>
+        </a>
+      </li>
+  
+      <li class="nav-item">
+        <a class="nav-link " href="{% url 'payment' %}">
+          <i class="bi bi-grid"></i>
+          <span>History</span>
+        </a>
+      </li>
+  
+      <li class="nav-item">
+        <a class="nav-link " href="{% url 'paymentInput' %}">
+          <i class="bi bi-grid"></i>
+          <span>Add Payment</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#" aria-expanded="false">
+          <i class="bi bi-journal-text"></i><span>Add User</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="forms-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="{% url 'accountAdd' %}?ptype=hotspot" class="active">
+              <i class="bi bi-circle"></i><span>Hotspot</span>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'accountAdd' %}?ptype=pppoe">
+              <i class="bi bi-circle"></i><span>PPPoE</span>
+            </a>
+          </li>
+
+        </ul>
+      </li>
+
+      <!-- End Dashboard Nav -->
+  
+      <li class="nav-heading">Pages</li>
+  
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="users-profile.html">
+          <i class="bi bi-person"></i>
+          <span>Profile</span>
+        </a>
+      </li><!-- End Profile Page Nav -->
+  
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="pages-faq.html">
+          <i class="bi bi-question-circle"></i>
+          <span>F.A.Q</span>
+        </a>
+      </li><!-- End F.A.Q Page Nav -->
+  
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="pages-contact.html">
+          <i class="bi bi-envelope"></i>
+          <span>Contact</span>
+        </a>
+      </li><!-- End Contact Page Nav -->
+  
+    </ul>
+  
+  </aside><!-- End Sidebar-->
+
+    {% block content %}
+
+    {% endblock %}
+
+
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static '/vendor/apexcharts/apexcharts.min.js' %}"></script>
+  <script src="{% static '/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static '/vendor/chart.js/chart.umd.js' %}"></script>
+  <script src="{% static '/vendor/echarts/echarts.min.js' %}"></script>
+  <script src="{% static '/vendor/quill/quill.min.js' %}"></script>
+  <script src="{% static '/vendor/simple-datatables/simple-datatables.js' %}"></script>
+  <script src="{% static '/vendor/tinymce/tinymce.min.js' %}"></script>
+  <script src="{% static '/vendor/php-email-form/validate.js' %}"></script>
+
+  <!-- Template Main JS File -->
+  <script src="{% static '/js/main.js' %}"></script>
+
+</body>
+
+</html>
