@@ -1,0 +1,338 @@
+{% extends 'base_temp.html' %}
+{% load static%}
+{% load humanize %}
+{% block content %}
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Dashboard</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'dashboard'%}">Home</a></li>
+          <li class="breadcrumb-item active">Dashboard</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section dashboard">
+      <div class="row">
+
+        <!-- Left side columns -->
+        <div class="col-lg-8">
+          <div class="row">
+
+            <!-- Sales Card -->
+            <div class="col-xxl-4 col-md-6">
+              <div class="card info-card sales-card">
+                
+
+                <div class="filter">
+                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                      <h6>Filter</h6>
+                    </li>
+
+                    <li><a class="dropdown-item" href="/?filter=Today">Today</a></li>
+                    <li><a class="dropdown-item" href="?filter=ThisMonth">This Month</a></li>
+                    <li><a class="dropdown-item" href="?filter=ThisYear">This Year</a></li>
+
+                  </ul>
+                </div>
+
+                <div class="card-body">
+                  <h5 class="card-title">Payments <span>| {{Timeline_filter}}</span></h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-cart"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>{{ no_of_payments|intcomma }}</h6>
+                      {%if persentage_pay_type  == 'increase' %}
+                        <span class="text-success small pt-1 fw-bold">{{persentage_pay_change}} %</span> <span class="text-muted small pt-2 ps-1">{{persentage_pay_type}}</span>
+                      {%elif persentage_pay_type == 'decrease' %}
+                        <span class="text-danger small pt-1 fw-bold">{{persentage_pay_change}} %</span> <span class="text-muted small pt-2 ps-1">{{persentage_pay_type}}</span>
+                      {%else%}
+                      <span class="text-warning small pt-1 fw-bold">{{persentage_pay_change}} %</span> <span class="text-muted small pt-2 ps-1">{{persentage_pay_type}}</span>
+                        {%endif%}
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div><!-- End Sales Card -->
+
+            <!-- Revenue Card -->
+            <div class="col-xxl-4 col-md-6">
+              <div class="card info-card revenue-card">
+
+                <div class="filter">
+                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                      <h6>Filter</h6>
+                    </li>
+
+                    <li><a class="dropdown-item" href="?filter=Today">Today</a></li>
+                    <li><a class="dropdown-item" href="?filter=ThisMonth">This Month</a></li>
+                    <li><a class="dropdown-item" href="?filter=ThisYear">This Year</a></li>
+                  </ul>
+                </div>
+
+                <div class="card-body">
+                  <h5 class="card-title">Revenue <span>| {{Timeline_filter}}</span></h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-currency-dollar"></i>
+                      
+                    </div>
+                    <div class="ps-3">
+                      <h6>Ksh {{total_revenue|intcomma}}</h6>
+                      {%if persentage_total_revenue_type == 'increase' %}
+                      <span class="text-success small pt-1 fw-bold">{{persentage_total_revenue_change}}%</span> <span class="text-muted small pt-2 ps-1">{{persentage_total_revenue_type}}</span>
+                      {%elif persentage_total_revenue_type == 'decrease'%}
+                      <span class="text-danger small pt-1 fw-bold">{{persentage_total_revenue_change}}%</span> <span class="text-muted small pt-2 ps-1">{{persentage_total_revenue_type}}</span>
+                      {%else%}
+                      <span class="text-warning small pt-1 fw-bold">{{persentage_total_revenue_change}}%</span> <span class="text-muted small pt-2 ps-1">{{persentage_total_revenue_type}}</span>
+                      {%endif%}
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div><!-- End Revenue Card -->
+
+            <!-- Customers Card -->
+            <div class="col-xxl-4 col-xl-12">
+
+              <div class="card info-card customers-card">
+
+                <div class="filter">
+                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                      <h6>Filter</h6>
+                    </li>
+
+                    <li><a class="dropdown-item" href="#">Today</a></li>
+                    <li><a class="dropdown-item" href="#">This Month</a></li>
+                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                  </ul>
+                </div>
+
+                <div class="card-body">
+                  <h5 class="card-title">Customers <span>| {{Timeline_filter}}</span></h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <!--<i class="bi bi-people"></i>-->
+                      <a href="/accounts" class="bi bi-people"></a>
+                    </div>
+                    <div class="ps-3">
+                      <h6>{{no_of_customers|intcomma}} Hotspot Users</h6>
+                      <span class="text-danger small pt-1 fw-bold"></span> <span class="text-muted small pt-2 ps-1"></span>
+
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="card-body">
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <!--<i class="bi bi-people"></i>-->
+                      <a href="/accounts" class="bi bi-people"></a>
+                    </div>
+                    <div class="ps-3">
+                      <h6>{{hotspot_users_count|intcomma}} PPPoE Users</h6>
+                      <span class="text-danger small pt-1 fw-bold"></span> <span class="text-muted small pt-2 ps-1"></span>
+
+                    </div>
+                  </div>
+
+                </div>               
+              </div>
+
+            </div><!-- End Customers Card -->
+
+            <!-- active Customers Card -->
+            <div class="col-xxl-4 col-xl-12">
+
+              <div class="card info-card customers-card">
+
+                <div class="filter">
+                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                      <h6>Filter</h6>
+                    </li>
+
+                    <li><a class="dropdown-item" href="#">Today</a></li>
+                    <li><a class="dropdown-item" href="#">This Month</a></li>
+                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                  </ul>
+                </div>
+
+                <div class="card-body">
+                  <h5 class="card-title">Sessions <span>| Today</span></h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      
+                      <a href="/sessions" class = "bi bi-people"></a>
+                    </div>
+                    <div class="ps-3">
+                      <h6>{{no_of_active_customers|intcomma}} Active sessions</h6>
+                      <span class="text-danger small pt-1 fw-bold"></span> <span class="text-muted small pt-2 ps-1"></span>
+
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div><!-- End  active Customers Card -->
+
+
+            <!-- Reports -->
+            <div class="col-12">
+              <div class="card">
+
+                <div class="filter">
+                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                      <h6>Filter</h6>
+                    </li>
+
+                    <li><a class="dropdown-item" href="#">Today</a></li>
+                    <li><a class="dropdown-item" href="#">This Month</a></li>
+                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                  </ul>
+                </div>
+
+
+
+              </div>
+            </div><!-- End Reports -->
+
+            <!-- Recent Sales -->
+            <div class="col-12">
+              <div class="card recent-sales overflow-auto">
+
+                <div class="filter">
+                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                      <h6>Filter</h6>
+                    </li>
+
+                    <li><a class="dropdown-item" href="#">Today</a></li>
+                    <li><a class="dropdown-item" href="#">This Month</a></li>
+                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                  </ul>
+                </div>
+
+                <div class="card-body">
+                  <h5 class="card-title">Recent Sales <span>| Today</span></h5>
+
+                  <table class="table table-borderless datatable">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">User</th>
+                        <th scope="col">Code</th>
+                        <th scope="col">Source</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Time</th>
+                        <th scope="col">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {%for p_hist in sales%}
+                      <tr>
+                        
+                        <th scope="row"><a href="#">#{{p_hist.pid}}</a></th>
+                        <td>{{p_hist.acc}}</td>
+                        <td><a href="#" class="text-primary">{{p_hist.code}}</a></td>
+                        <td>Ksh {{p_hist.source}}</td>
+                        <td>Ksh {{p_hist.amount}}</td>
+                        <td>{{p_hist.date}}</td>
+                        <td>{{p_hist.time}}</td>
+                        <td><span class="badge bg-success">Recieved</span></td>
+                        
+                      </tr>
+                      {%endfor%}
+                      
+                    </tbody>
+                  </table>
+
+                </div>
+
+              </div>
+            </div><!-- End Recent Sales -->
+
+          </div>
+        </div><!-- End Left side columns -->
+
+        <!-- Right side columns -->
+        <div class="col-lg-4">
+
+          <!-- Recent Activity -->
+          <div class="card">
+            <div class="filter">
+              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                <li class="dropdown-header text-start">
+                  <h6>Filter</h6>
+                </li>
+
+                <li><a class="dropdown-item" href="#">Today</a></li>
+                <li><a class="dropdown-item" href="#">This Month</a></li>
+                <li><a class="dropdown-item" href="#">This Year</a></li>
+              </ul>
+            </div>
+
+            <div class="card-body">
+              <h5 class="card-title">Recent Activity <span>| Today</span></h5>
+              {% for log in logs %}
+              <div class="activity">
+                
+                <div class="activity-item d-flex">
+                  <div class="activite-label">{{log.time}} [{{log.date}}]</div>
+                  {%if log.topic == 'error'%}
+                  <i class='bi bi-circle-fill activity-badge text-danger align-self-start'></i>
+                  {%elif log.topic == 'finance'%}
+                  <i class='bi bi-circle-fill activity-badge text-success align-self-start'></i>
+                  {%elif log.topic == 'payment'%}
+                  <i class='bi bi-circle-fill activity-badge text-primary align-self-start'></i>
+                  {%else%}
+                  <i class='bi bi-circle-fill activity-badge text-muted align-self-start'></i>
+                  {%endif%}
+                  
+                  <div class="activity-content">
+                    {{log.desc}}
+
+                  </div>                  
+                </div><!-- End activity item-->
+                {%endfor%}
+
+              </div>
+
+            </div>
+          </div><!-- End Recent Activity -->
+
+            </div>
+          </div><!-- End News & Updates -->
+
+        </div><!-- End Right side columns -->
+
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+  {% endblock %}
