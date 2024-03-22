@@ -13,8 +13,12 @@ It's simplistic design enables a person with little to no mikroik skills to also
 <div>*Payment retriever<div>
 
 </section>
-<section><!--video-->
-[![Watch the video](video/web.mp4)](video/web.mp4)
+<section>
+<p>To use, Run :
+<div>Make the set migrations - <code>python manage.py makemigrations</code>
+<div>Migrate databases- <code>python manage.py migrate</code></div>
+<div>Run server- <code>python manage.py runserver</code></div>
+</p>
 
 </section>
 <section>
