@@ -1,6 +1,5 @@
 # mikrotik_hermes
 An automated service which is used to manage users connections to mikrotik's hotsport or pppoe service.<br>
-<section><h1>IT SHOULD BE NOTED THAT THIS CODE IS STILL UNDER CREATION AND MAY CHANGE OR NOT WORK IN YOUR ENVIRONMENT. IT IS CURRENTLY MADE FOR EXPERIMENTAT TESTING AND DEBUGING</h1></section>
 <section>
 
 It's simplistic design enables a person with little to no mikroik skills to also operate it and explore the world of mikrotik. It facilitates:<br>
@@ -12,6 +11,10 @@ It's simplistic design enables a person with little to no mikroik skills to also
 <div>*Python scripting<div>
 <div>*System administration<div>
 <div>*Payment retriever<div>
+
+</section>
+<section><!--video-->
+[![Watch the video](video/web.mp4)](video/web.mp4)
 
 </section>
 <section>

@@ -43,7 +43,7 @@ class Users(models.Model):
         #managed = False
 
 class Contacts(models.Model):
-    cid           = models.IntegerField(primary_key=True) 
+    cid           = models.AutoField(primary_key=True) 
     account       = models.TextField()
     contact       = models.TextField()
     

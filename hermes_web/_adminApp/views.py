@@ -107,23 +107,7 @@ def dashboard(request):
     filter_param = request.GET.get('filter', None)
 
     dataform={}
-    mess=Messages.objects.filter(read=False)
-    notif=Notifications.objects.filter(read=False)
-    n=1
-    for nf in notif:
-        dataform['notifications']={n:{"type":nf.category,
-                                "topic":nf.topic,
-                                "message":nf.notification,
-                                'nid':nf.id}
-                            }
-        n+=1
-    m=1
-    for ms in mess:
-        dataform['messages']={m:{"name":ms.sender,
-                                "message":ms.message,
-                                'mid':ms.id}
-                            }
-        m+=1
+    status,dataform['messages'],dataform['notifications'] = MN(request.user.username)
     #ALL
     if filter_param == None:
         #total revenue
@@ -305,23 +289,8 @@ def payment_input(request):
     filter_param = request.GET.get('account', None)
 
     dataform={}
-    mess=Messages.objects.filter(read=False)
-    notif=Notifications.objects.filter(read=False)
-    n=1
-    for nf in notif:
-        dataform['notifications']={n:{"type":nf.category,
-                                "topic":nf.topic,
-                                "message":nf.notification,
-                                'nid':nf.id}
-                            }
-        n+=1
-    m=1
-    for ms in mess:
-        dataform['messages']={m:{"name":ms.sender,
-                                "message":ms.message,
-                                'mid':ms.id}
-                            }
-        m+=1
+    status,dataform['messages'],dataform['notifications'] = MN(request.user.username)
+
 
     if not filter_param == None:
         account_data=Users.objects.get(acc=filter_param)
@@ -336,6 +305,7 @@ def payment_input(request):
 def payment_submit(request):
     if not request.user.is_authenticated:
         return redirect('/login')
+    
     trans_code = request.POST['pay_code']
     account_no=request.POST['account_no']
     source=request.POST['pay_source']
@@ -373,23 +343,7 @@ def payment_submit(request):
     #print(account_no)
 
     dataform={}
-    mess=Messages.objects.filter(read=False)
-    notif=Notifications.objects.filter(read=False)
-    n=1
-    for nf in notif:
-        dataform['notifications']={n:{"type":nf.category,
-                                "topic":nf.topic,
-                                "message":nf.notification,
-                                'nid':nf.id}
-                            }
-        n+=1
-    m=1
-    for ms in mess:
-        dataform['messages']={m:{"name":ms.sender,
-                                "message":ms.message,
-                                'mid':ms.id}
-                            }
-        m+=1
+    status,dataform['messages'],dataform['notifications'] = MN(request.user.username)
 
     dataform={"transacc":account_no,
                "transname":Users.objects.get(acc=account_no).name,
@@ -505,23 +459,7 @@ def sessions(request):
         return redirect('/login')
 
     dataform={}
-    mess=Messages.objects.filter(read=False)
-    notif=Notifications.objects.filter(read=False)
-    n=1
-    for nf in notif:
-        dataform['notifications']={n:{"type":nf.category,
-                                "topic":nf.topic,
-                                "message":nf.notification,
-                                'nid':nf.id}
-                            }
-        n+=1
-    m=1
-    for ms in mess:
-        dataform['messages']={m:{"name":ms.sender,
-                                "message":ms.message,
-                                'mid':ms.id}
-                            }
-        m+=1
+    status,dataform['messages'],dataform['notifications'] = MN(request.user.username)
 
     all_sessions = Sessions.objects.all()
     active_sessions = Sessions.objects.filter(status="active")
@@ -542,23 +480,7 @@ def history(request):
     filter_param = request.GET.get('filter', None)
 
     dataform={}
-    mess=Messages.objects.filter(read=False)
-    notif=Notifications.objects.filter(read=False)
-    n=1
-    for nf in notif:
-        dataform['notifications']={n:{"type":nf.category,
-                                "topic":nf.topic,
-                                "message":nf.notification,
-                                'nid':nf.id}
-                            }
-        n+=1
-    m=1
-    for ms in mess:
-        dataform['messages']={m:{"name":ms.sender,
-                                "message":ms.message,
-                                'mid':ms.id}
-                            }
-        m+=1
+    status,dataform['messages'],dataform['notifications'] = MN(request.user.username)
 
     #total revenue
     totalRevenue=0
@@ -578,23 +500,7 @@ def account(request):
     filter_param = request.GET.get('account', None)
 
     dataform={}
-    mess=Messages.objects.filter(read=False)
-    notif=Notifications.objects.filter(read=False)
-    n=1
-    for nf in notif:
-        dataform['notifications']={n:{"type":nf.category,
-                                "topic":nf.topic,
-                                "message":nf.notification,
-                                'nid':nf.id}
-                            }
-        n+=1
-    m=1
-    for ms in mess:
-        dataform['messages']={m:{"name":ms.sender,
-                                "message":ms.message,
-                                'mid':ms.id}
-                            }
-        m+=1
+    status,dataform['messages'],dataform['notifications'] = MN(request.user.username)
 
     all_users = Users.objects.all()
 
@@ -610,23 +516,7 @@ def account_edit(request):
         return redirect('/login')
 
     dataform={}
-    mess=Messages.objects.filter(read=False)
-    notif=Notifications.objects.filter(read=False)
-    n=1
-    for nf in notif:
-        dataform['notifications']={n:{"type":nf.category,
-                                "topic":nf.topic,
-                                "message":nf.notification,
-                                'nid':nf.id}
-                            }
-        n+=1
-    m=1
-    for ms in mess:
-        dataform['messages']={m:{"name":ms.sender,
-                                "message":ms.message,
-                                'mid':ms.id}
-                            }
-        m+=1
+    status,dataform['messages'],dataform['notifications'] = MN(request.user.username)
 
     if request.method == 'POST':
         print(request.POST)
@@ -724,51 +614,22 @@ def profile(request):
     if not request.user.is_authenticated:
         return redirect('/login')
     dataform={}
-    mess=Messages.objects.filter(read=False)
-    notif=Notifications.objects.filter(read=False)
-    n=1
-    for nf in notif:
-        dataform['notifications']={n:{"type":nf.category,
-                                "topic":nf.topic,
-                                "message":nf.notification,
-                                'nid':nf.id}
-                            }
-        n+=1
-    m=1
-    for ms in mess:
-        dataform['messages']={m:{"name":ms.sender,
-                                "message":ms.message,
-                                'mid':ms.id}
-                            }
-        m+=1
+    status,dataform['messages'],dataform['notifications'] = MN(request.user.username)
     return render(request,'user-profile.html',dataform)
 
 def pppoe_account(request):
     if not request.user.is_authenticated:
         return redirect('/login')
     dataform={}
-    mess=Messages.objects.filter(read=False)
-    notif=Notifications.objects.filter(read=False)
-    n=1
-    for nf in notif:
-        dataform['notifications']={n:{"type":nf.category,
-                                "topic":nf.topic,
-                                "message":nf.notification,
-                                'nid':nf.id}
-                            }
-        n+=1
-    m=1
-    for ms in mess:
-        dataform['messages']={m:{"name":ms.sender,
-                                "message":ms.message,
-                                'mid':ms.id}
-                            }
-        m+=1
+    status,dataform['messages'],dataform['notifications'] = MN(request.user.username)
     return render(request,'user-profile.html',dataform )
 
 def add_user(request):
     if not request.user.is_authenticated:
         return redirect('/login')
+    
+    dataform={}
+    status,dataform['messages'],dataform['notifications'] = MN(request.user.username)
 
     if request.method == 'POST':
         upkgType    =request.POST.get('packageType')
@@ -793,6 +654,9 @@ def add_user(request):
                             balance =0.00,
                         )
             addUser.save()
+            addContact=Contacts(account = randomAcc,
+                                contact=request.POST.get('contact'))
+            addContact.save()
             log('User,Add',f'New PPPoE user {randomAcc} Added by {request.user.username}')
             return redirect(f'/accounts/account?account={randomAcc}')
 
@@ -838,6 +702,7 @@ def packages(request):
     if not request.user.is_authenticated:
         return redirect('/login')
     dataform = {}
+    status,dataform['messages'],dataform['notifications'] = MN(request.user.username)
     dataform['edit']=False
 
     spef = request.GET.get('pid',None)
@@ -853,7 +718,7 @@ def packages(request):
                         pkg_type  = request.POST.get('packageType'), 
                         )
             addPackage.save()
-            log('Package,Edit',f'New Package {request.POST.get("Name")} Added By {request.user.username}')
+            log('Package,Edit',f'Npythew Package {request.POST.get("Name")} Added By {request.user.username}')
 
         elif criteria == 'edit':
             editpkg=Pkgs.objects.get(pno=request.POST.get('packageId'))
