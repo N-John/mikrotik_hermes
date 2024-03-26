@@ -1,0 +1,83 @@
+{% extends 'base_temp.html' %}
+{% load static%}
+{% load humanize %}
+{% block content %}
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Session</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{%url 'adashboard'%}">Home</a></li>
+          <li class="breadcrumb-item">Sessions</li>
+          <li class="breadcrumb-item active">Session</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+    <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{title}}</h5>
+
+          <!-- Multi Columns Form -->
+          <form class="row g-3" method="post" action="{%url 'asessionMod'%}">
+            {% csrf_token %}
+            <div class="col-md-6">
+              <label for="inputName5" class="form-label" >Account Name</label>
+              <input type="text" class="form-control" id="inputName5" name="account" value="{{Account}}" readonly>
+              <input type="text" hidden name = "formId"value="{{acsId}}">
+            </div>
+            <div class="col-md-6">
+              <label for="inputEmail5" class="form-label">Profile</label>
+              <input type="email" class="form-control" id="inputEmail5" name="profile" value="{{profile}}" readonly>
+            </div>
+            <div class="col-md-6">
+                <label for="inputEmail5" class="form-label" >Start Date </label>
+
+
+                <input type="date" class="form-control" name="startDate" value="{{ startDate|date:'Y-m-d' }}">
+              </div>
+
+            <div class="col-md-6">
+                <label for="inputPassword5" class="form-label">Start Time</label>
+                <input type="time" class="form-control" name="startTime" value="{{ startTime|time:'H:i' }}">
+            </div>
+
+            <div class="col-md-6">
+                <label for="inputEmail5" class="form-label">End Date</label>
+                <input type="date" class="form-control" name="endDate" value="{{ endDate|date:'Y-m-d' }}">
+              </div>
+
+            <div class="col-md-6">
+                <label for="inputPassword5" class="form-label">End Time</label>
+                <input type="time" class="form-control" name="endTime" value="{{ endTime|time:'H:i' }}">
+            </div>
+
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked="" disabled>
+                <label class="form-check-label" for="flexSwitchCheckChecked" >Create remote session </label>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">Form type</label>
+                <div class="col-sm-10">
+                  <select class="form-select" aria-label="Default select example" name="formType">
+                    {%if formType == 'creation'%}
+                    <option selected="selected"  value="creation">Session Creation</option>
+                    {%elif formType == 'edit'%}
+                    <option selected="selected" value="edit">Session Editing</option>
+                    {%endif%}
+                  </select>
+                </div>
+              </div>
+
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary">Create Session</button>
+              <button type="reset" class="btn btn-secondary">Reset</button>
+            </div>
+          </form><!-- End Multi Columns Form -->
+
+        </div>
+      </div>
+
+ 
+  {% endblock %}

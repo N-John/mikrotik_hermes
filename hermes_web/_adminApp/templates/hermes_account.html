@@ -8,7 +8,7 @@
       <h1>Users</h1>
       <nav>
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="{% url 'dashboard'%}">Home</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'adashboard'%}">Home</a></li>
           <li class="breadcrumb-item">Users</li>
           <li class="breadcrumb-item active">Accounts</li>
         </ol>
@@ -42,7 +42,7 @@
           <div class="d-flex align-items-center">
             <div class="ps-3">
               <h4>{{ pppoe_user_count|intcomma }} users</h4>
-              <a href="{% url 'accountAdd' %}?ptype=pppoe"><button type="button" class="btn btn-info rounded-pill">Add User</button></a>
+              <a href="{% url 'aaccountAdd' %}?ptype=pppoe"><button type="button" class="btn btn-info rounded-pill">Add User</button></a>
             </div>
           </div>
         </div>
@@ -71,7 +71,7 @@
       <h5 class="card-title"><a href="#hotspot_table">Hotspot Users</a></h5>
         <div class="ps-3">
           <h4>{{hotspot_users_count|intcomma}} Users</h4>
-          <a href="{% url 'accountAdd' %}?ptype=hotspot"><button type="button" class="btn btn-info rounded-pill">Add User</button></a>
+          <a href="{% url 'aaccountAdd' %}?ptype=hotspot"><button type="button" class="btn btn-info rounded-pill">Add User</button></a>
         </div>
       </div>
     </div>

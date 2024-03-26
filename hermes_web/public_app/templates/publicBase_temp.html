@@ -184,7 +184,7 @@
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="{% url 'alogout' %}">
+              <a class="dropdown-item d-flex align-items-center" href="{% url 'logout' %}">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Sign Out</span>
               </a>
@@ -204,41 +204,41 @@
     <ul class="sidebar-nav" id="sidebar-nav">
   
       <li class="nav-item">
-        <a class="nav-link " href="{% url 'adashboard' %}">
+        <a class="nav-link " href="{% url 'dashboard' %}">
           <i class="bi bi-grid"></i>
           <span>Dashboard</span>
         </a>
       </li>
   
       <li class="nav-item">
-        <a class="nav-link " href="{% url 'aaccount' %}">
+        <a class="nav-link " href="{% url 'account' %}">
           <i class="bi bi-grid"></i>
           <span>Account</span>
         </a>
       </li>
   
       <li class="nav-item">
-        <a class="nav-link " href="{% url 'asessions' %}">
+        <a class="nav-link " href="{% url 'sessions' %}">
           <i class="bi bi-grid"></i>
           <span>Sessions</span>
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link " href="{% url 'apackages' %}">
+        <a class="nav-link " href="{% url 'packages' %}">
           <i class="bi bi-grid"></i>
           <span>Packages</span>
         </a>
       </li>
   
       <li class="nav-item">
-        <a class="nav-link " href="{% url 'apayment' %}">
+        <a class="nav-link " href="{% url 'payment' %}">
           <i class="bi bi-grid"></i>
           <span>History</span>
         </a>
       </li>
   
       <li class="nav-item">
-        <a class="nav-link " href="{% url 'apaymentInput' %}">
+        <a class="nav-link " href="{% url 'paymentInput' %}">
           <i class="bi bi-grid"></i>
           <span>Add Payment</span>
         </a>
@@ -250,12 +250,12 @@
         </a>
         <ul id="forms-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
           <li>
-            <a href="{% url 'aaccountAdd' %}?ptype=hotspot" class="active">
+            <a href="{% url 'accountAdd' %}?ptype=hotspot" class="active">
               <i class="bi bi-circle"></i><span>Hotspot</span>
             </a>
           </li>
           <li>
-            <a href="{% url 'aaccountAdd' %}?ptype=pppoe">
+            <a href="{% url 'accountAdd' %}?ptype=pppoe">
               <i class="bi bi-circle"></i><span>PPPoE</span>
             </a>
           </li>

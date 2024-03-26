@@ -1,4 +1,4 @@
-{% extends 'base_temp.html' %}
+{% extends 'publicBase_temp.html' %}
 {% load static%}
 {% load humanize %}
 {% block content %}
@@ -20,7 +20,7 @@
         <h5 class="card-title">{{name}} [{{acc}}]</h5>
 
         <!-- Custom Styled Validation -->
-        <form class="row g-3 needs-validation" method='post' action="{%url 'aaccountEdit'%}" novalidate>
+        <form class="row g-3 needs-validation" method='post' action="/accounts/account" novalidate>
           {% csrf_token %} 
           <div class="col-md-4">
             <label for="validationCustom01" class="form-label">Name</label>
@@ -57,7 +57,7 @@
             <select class="form-select" id="validationCustom04" name="account_edit_package" required>
               <option selected disabled value="{{package}}">{{package}}</option>
               {%for popt in pkg_options%}
-              <option value="{{popt.pno}}">{{popt.name}}</option>
+              <option>{{popt.name}}</option>
               {%endfor%}
 
             </select>
@@ -82,27 +82,16 @@
       </div>
     </div>
 
-    <!-- payment add card -->
+    <!-- Card with header and footer -->
     <div class="card">
       <div class="card-header">Payment</div>
       <div class="card-body">
         <h4 class="card-title">TOTAL INCOME: </h4>
         <h4 class="card-title">PAYMENT METHORD: M-pesa</h4>
-        <button type="button" class="btn btn-outline-success" ><a href="{%url 'apaymentInput'%}?account={{acc}}">Make Payment</a></button>
+        <button type="button" class="btn btn-outline-success" ><a href="/payments/input?account={{acc}}">Make Payment</a></button>
       </div>
   
-    </div><!-- End payment card -->
-
-    <!-- session card -->
-    <div class="card">
-      <div class="card-header">Current session</div>
-      <div class="card-body">
-        <h4 class="card-title">start Time: </h4>
-        <h4 class="card-title">End Time: </h4>
-        <button type="button" class="btn btn-outline-success" ><a href="{%url 'asessionMod'%}?AccountId={{acc}}">Create Session</a></button>
-      </div>
-  
-    </div><!-- session card -->
+    </div><!-- End Card with header and footer -->
 
 
     
@@ -131,7 +120,7 @@
               {%for ses in sessions%}
               <tr>
                 
-                <th scope="row"><a href="{%url 'asessionMod' %}?sessionId={{ses.sid}}">#{{ses.sid}}</a></th>
+                <th scope="row"><a href="#">#{{ses.sid}}</a></th>
                 <td><a href="#" class="text-primary">{{ses.acc}}</a></td>
                 <td>{{ses.profile}}</td>
                 <td>{{ses.startDate}}</td>

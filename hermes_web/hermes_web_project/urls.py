@@ -15,10 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.shortcuts import redirect
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',include('_adminApp.urls')),
+    path('a/',include('_adminApp.urls')),
+    path('c/',include('public_app.urls')),
+    #path('',include('public_app.urls')),
     path('oauth/v1/',include('_apiApp.urls')),
 
 ]

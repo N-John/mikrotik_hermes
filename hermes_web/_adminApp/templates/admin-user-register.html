@@ -14,7 +14,7 @@
                   <h5 class="card-title">Add {{pkgtype}} User</h5>
     
                   <!-- Floating Labels Form -->
-                  <form class="row g-3" method="post">
+                  <form class="row g-3" action="{%url 'aaccountAdd'%}" method="post">
                     {% csrf_token %}
                     <div class="col-md-12">
                       <div class="form-floating">

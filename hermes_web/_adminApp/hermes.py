@@ -64,6 +64,7 @@ class hermes:
             
             for cmd in cmds:
                 print(f'Running command [{cmd}]')
+                continue
                 stdin, stdout, stderr = ssh_client.exec_command(f'log warning "auto running command {cmd}"')
                 stdin, stdout, stderr = ssh_client.exec_command(cmd)
                 output.append(stdout.read().decode('utf-8'))
@@ -92,9 +93,9 @@ class hermes:
 
             if not sm_acc == None:#if a user is specified, check even they have an inactive session
 
-                if not Sessions.objects.using('maindb').using('maindb').filter(acc=sm_acc,status='active').exists(): #if no active session create new session
-                    ac=Users.objects.using('maindb').using('maindb').get(acc=sm_acc)
-                    pkgDb=Pkgs.objects.using('maindb').using('maindb').get(pno=ac.package)
+                if not Sessions.objects.filter(acc=sm_acc,status='active').exists(): #if no active session create new session
+                    ac=Users.objects.get(acc=sm_acc)
+                    pkgDb=Pkgs.objects.get(pno=ac.package)
                     print(f'User {ac.name} has no active session.\n Creating session...')
 
                    
@@ -112,7 +113,7 @@ class hermes:
 
                         #update balance for removal
                         BALU=BALU-PKG_PRICEU
-                        user_db_ac=Users.objects.using('maindb').get(acc=sm_acc)
+                        user_db_ac=Users.objects.get(acc=sm_acc)
                         user_db_ac.balance=BALU
                         user_db_ac.save()
                         print(f'{sm_acc} Balance updated to {BALU}')
@@ -146,7 +147,7 @@ class hermes:
 
                
             
-            active_sess = Sessions.objects.using('maindb').filter(status='active')
+            active_sess = Sessions.objects.filter(status='active')
             print(f'Number of active sessions: {active_sess.count()}')
            
             for sessDat in active_sess:#loop through active session
@@ -162,8 +163,8 @@ class hermes:
                     sessDat.save()
                     
                     #(2)CHECK IF THE ACCOUNT HAS ENOUGH TO ACTIVATE THE NEXT SESSION
-                    userObj=Users.objects.using('maindb').get(acc=sessDat.acc)
-                    pkgObj=Pkgs.objects.using('maindb').get(pno=userObj.package)
+                    userObj=Users.objects.get(acc=sessDat.acc)
+                    pkgObj=Pkgs.objects.get(pno=userObj.package)
                     
                     
                     BAL=userObj.balance
@@ -179,7 +180,7 @@ class hermes:
                         removeFinance.save()
 
                         BAL=BAL-PKG_PRICE
-                        userdo=Users.objects.using('maindb').get(acc=uacc)
+                        userdo=Users.objects.get(acc=uacc)
                         userdo.balance=BAL
                         userdo.save()
                         
@@ -206,7 +207,7 @@ class hermes:
 
                     else:
                         #disable user 
-                        #disun=Users.objects.using('maindb').get(acc=uacc)
+                        #disun=Users.objects.get(acc=uacc)
                         print(f'{tme()} USER {userObj.name} [{userObj.acc}] DISCONTINUED FROM CONNECTION')
                         #un=cache_account[acc_no]["username"]
                         if pkgObj.pkg_type== 'pppoe':
@@ -240,6 +241,55 @@ class hermes:
             print(RED('UNABLE TO ADD USER: '+str(e)))
             return 0    
         
-    def addPackage():
-        pass
+    def addPackage(name:str,speed:int,max_users:str,pkg_type:str):
+        try:
+            print(MENU('ADDING Package: '))
+            cmd=[]            
+            if pkg_type == 'hotspot':
+                cmd.append(f'ip hotspot user profile add name="{name}" rate-limit="{speed}M/{speed}M" shared-users="{max_users}"')
+                
+            elif pkg_type == 'pppoe':
+                cmd.append(f' ppp profile add name="{name}" rate-limit="{speed}M/{speed}M"')
+                
+            hermes.ssh_command(cmd)
 
+            return 1
+        except Exception as e:
+            print(RED('UNABLE TO ADD USER: '+str(e)))
+            return 0   
+
+    def editPackage(name:str,speed:int,max_users:str,pkg_type:str):
+        try:
+            print(MENU('EDIT Package: '))
+            cmd=[]            
+            if pkg_type == 'hotspot':
+                cmd.append(f'ip hotspot user profile edit name="{name}" rate-limit="{speed}M/{speed}M" shared-users="{max_users}"')
+                
+            elif pkg_type == 'pppoe':
+                cmd.append(f' ppp profile set name="{name}" rate-limit="{speed}M/{speed}M"')
+                
+            hermes.ssh_command(cmd)
+
+            return 1
+        except Exception as e:
+            print(RED('UNABLE TO ADD USER: '+str(e)))
+            return 0 
+
+    def userEdit(name:str,profile:str,username:str,password:str,pkg_type:str):
+        try:
+            print(MENU('EDIT USER: '))
+            cmd=[]            
+            if pkg_type == 'hotspot':
+                cmd.append(f'ip hotspot user set {username} comment="{name}" name="{username}" password="{password}" profile="{profile}"  server={hotspotServerName}')
+                
+            elif pkg_type == 'pppoe':
+                cmd.append(f'ppp secret set {username} comment="{name}" name="{username}" password="{password}" profile="{profile}"')
+                
+            hermes.ssh_command(cmd)
+
+            return 1
+        except Exception as e:
+            print(RED('UNABLE TO EDIT USER: '+str(e)))
+            return 0 
+
+    

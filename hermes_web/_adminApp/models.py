@@ -129,4 +129,20 @@ class pppoe(models.Model):
     class Meta:
         db_table = 'pppoeAccounts'
        # managed = False
-        
+
+'''class adminAccounts(models.Model):
+    id =models.TextField(primary_key=True)
+    password=models.CharField(max_length=128)
+    last_login=models.DateTimeField()
+    is_superuser=models.BooleanField()
+    username=models.TextField(max_length=150)
+    last_name=models.TextField(max_length=150)
+    email=models.TextField(max_length=254)
+    is_staff=models.BooleanField()
+    is_active=models.BooleanField()
+    date_joined=models.DateTimeField()
+    first_name=models.TextField(max_length=150)
+
+    class Meta:
+        db_table = 'auth_user'
+       # managed = False     ''' 

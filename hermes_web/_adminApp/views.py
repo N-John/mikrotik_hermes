@@ -1,4 +1,3 @@
-
 from django.shortcuts import render,redirect
 from django.http import HttpResponse, HttpRequest,HttpResponseRedirect
 from django.contrib.auth import authenticate, login,logout
@@ -6,6 +5,7 @@ from django.contrib.auth import authenticate, login,logout
 from .models import Payment,Pkgs,Logs,pppoe,Contacts
 from .models import Users,Sessions,Finances
 from .models import Notifications,Messages
+#from .models import adminAccounts
 
 import json
 import time
@@ -13,6 +13,7 @@ import datetime as dt
 from datetime import datetime, date, timedelta
 import random
 
+from . import hermes
 
 def MN(user:str):
 
@@ -73,6 +74,28 @@ def tme():
     L_TIME = datetime.strptime(TME[-2], "%H:%M:%S").strftime("%I:%M %p")
     return f'{L_DATE} {L_TIME}'
 
+def notif(topic:str,message:str,recipient:str,category:str):
+    #NOTIFICATION category CAN EITHER BE WARNING,DANGER OR SUCCESS
+    recipientAccounts=[]
+    if recipient.lower() == "all":
+        for usr in Users.objects.all():
+            recipientAccounts.append(usr.username)
+    else:
+        if Users.objects.filter(acc=recipient).exists():
+            recipientAccounts.append(Users.objects.get(acc=recipient))
+            
+    for recipientAccount in recipientAccounts:
+        addNotification=Notifications(topic= topic,#heading of notificcation
+                                        category    = category,#WARNING,DANGER OR SUCCESS
+                                        to          = recipientAccount,#recipient
+                                        dateTime    = tme(),  
+                                        notification= message, 
+                                        read        = False
+                                        )
+        addNotification.save()
+    
+    return 1
+    
 ##############################
 
 def login_verif(request):
@@ -84,12 +107,12 @@ def login_verif(request):
             login(request, user)
             print(user)
             log('User,Login',f'{user} Logged in')
-            return redirect('dashboard')  # Redirect to a success page
+            return redirect('adashboard')  # Redirect to a success page
         else:
-            return render(request, 'page-login.html', {'err': True,"err_mess":'Invalid username or password'})
+            return render(request, 'admin-page-login.html', {'err': True,"err_mess":'Invalid username or password'})
     else:
         #return redirect('/admin/')
-        return render(request, 'page-login.html')
+        return render(request, 'admin-page-login.html')
 
 def logout_view(request):
     usr=request.user.username
@@ -97,11 +120,11 @@ def logout_view(request):
     logout(request)
     log('User,Logout',f'User {usr} Logged Out')
 
-    return redirect('/login')  # Redirect to the login page
+    return redirect('alogin')  # Redirect to the login page
 
 def dashboard(request):
     if not request.user.is_authenticated:
-        return redirect('/login')
+        return redirect('alogin')
     
     all_payments = Payment.objects.all()
     filter_param = request.GET.get('filter', None)
@@ -285,7 +308,7 @@ def dashboard(request):
 
 def payment_input(request):
     if not request.user.is_authenticated:
-        return redirect('/login')
+        return redirect('alogin')
     filter_param = request.GET.get('account', None)
 
     dataform={}
@@ -304,7 +327,7 @@ def payment_input(request):
     
 def payment_submit(request):
     if not request.user.is_authenticated:
-        return redirect('/login')
+        return redirect('alogin')
     
     trans_code = request.POST['pay_code']
     account_no=request.POST['account_no']
@@ -456,7 +479,7 @@ def sessionCreation(acc:str):
 
 def sessions(request):
     if not request.user.is_authenticated:
-        return redirect('/login')
+        return redirect('alogin')
 
     dataform={}
     status,dataform['messages'],dataform['notifications'] = MN(request.user.username)
@@ -473,9 +496,91 @@ def sessions(request):
 
     return render(request,'hermes_active.html',dataform)
 
+def sessionMod(request):
+    if not request.user.is_authenticated:
+        return redirect('alogin')
+    
+    dataform={}
+    status,dataform['messages'],dataform['notifications'] = MN(request.user.username)
+
+
+    if request.method == 'POST':
+        if request.POST['formType']=='creation':#creating a new session
+            usrObj=Users.objects.get(acc=request.POST['formId'])
+            StartDate = datetime.strptime(request.POST['startDate'], '%Y-%m-%d').strftime('%d-%b-%Y')
+            endDate = datetime.strptime(request.POST['endDate'], '%Y-%m-%d').strftime('%d-%b-%Y')
+            startTime = datetime.strptime(request.POST['startTime'], '%H:%M').strftime('%I:%M %p')
+            endTime = datetime.strptime(request.POST['endTime'], '%H:%M').strftime('%I:%M %p')
+            
+            addSession=Sessions(acc= usrObj.acc,
+                                profile       = usrObj.package,
+                                startDate   = StartDate,
+                                startTime    = startTime,
+                                endDate   = endDate,
+                                endTime   = endTime,
+                                status        = 'active', 
+                                creation_date =tme()
+                                )
+            addSession.save()
+            return redirect('aaccount')
+            
+        elif request.POST['formType']=='edit':#editing a previous session
+            StartDate = datetime.strptime(request.POST['startDate'], '%Y-%m-%d').strftime('%d-%b-%Y')
+            endDate = datetime.strptime(request.POST['endDate'], '%Y-%m-%d').strftime('%d-%b-%Y')
+            startTime = datetime.strptime(request.POST['startTime'], '%H:%M').strftime('%I:%M %p')
+            endTime = datetime.strptime(request.POST['endTime'], '%H:%M').strftime('%I:%M %p')
+            editSession=Sessions.objects.get(sid=request.POST['formId'])
+            editSession.startDate=StartDate
+            editSession.startTime=startTime
+            editSession.endDate=endDate
+            editSession.endTime=endTime
+            editSession.save()
+            usr=Users.objects.get(acc=editSession.acc)
+
+            #return redirect(f'aaccount?type={Pkgs.objects.get(pno=usr.package).pkg_type}&account={usr.acc}')
+            return redirect('aaccount')
+
+        else:
+            print('session modification fail')
+
+    sessionId = request.GET.get('sessionId', None)
+    sessionAcc= request.GET.get('AccountId', None)
+
+    if sessionId == None:#a session creation request form
+        accObj=Users.objects.get(acc=sessionAcc)
+        pkgObj=Pkgs.objects.get(pno=accObj.package)
+        dataform['title']='Create New session'
+        dataform['formType']='creation'
+        dataform['Account']=accObj.name
+        dataform['acsId']=accObj.acc
+        dataform['profile']=pkgObj.name
+        dataform['startDate']=date.today()
+        dataform['startTime']=datetime.now().time()
+        dataform['endDate']=datetime.now().date() + timedelta(days=pkgObj.days)
+        dataform['endTime']=datetime.now().time()
+
+    else:# a session edit for session Id        
+        sesObj=Sessions.objects.get(sid=sessionId)
+        accObj=Users.objects.get(acc=sesObj.acc)
+        pkgObj=Pkgs.objects.get(pno=sesObj.profile)
+        
+
+        dataform['title']=f'Session edit [{sessionId}]'
+        dataform['formType']='edit'
+        dataform['Account']=accObj.name
+        dataform['acsId']=sessionId
+        dataform['profile']=pkgObj.name#YYYY-MM-DD
+        dataform['startDate']=datetime.strptime(sesObj.startDate, '%d-%b-%Y')
+        dataform['startTime']=datetime.strptime(sesObj.startTime, '%I:%M %p')
+        dataform['endDate']=datetime.strptime(sesObj.endDate, '%d-%b-%Y')
+        dataform['endTime']=datetime.strptime(sesObj.endTime, '%I:%M %p')
+
+    return render(request,'session-page.html',dataform)
+    
+
 def history(request):
     if not request.user.is_authenticated:
-        return redirect('/login')
+        return redirect('alogin')
     all_payments = Payment.objects.all()
     filter_param = request.GET.get('filter', None)
 
@@ -496,7 +601,7 @@ def history(request):
 
 def account(request):
     if not request.user.is_authenticated:
-        return redirect('/login')
+        return redirect('alogin')
     filter_param = request.GET.get('account', None)
 
     dataform={}
@@ -513,7 +618,7 @@ def account(request):
 
 def account_edit(request):
     if not request.user.is_authenticated:
-        return redirect('/login')
+        return redirect('alogin')
 
     dataform={}
     status,dataform['messages'],dataform['notifications'] = MN(request.user.username)
@@ -534,12 +639,14 @@ def account_edit(request):
         acc_edit_obj.password=request.POST['account_edit_password']
         acc_edit_obj.phone=acc_phne
         acc_edit_obj.balance=request.POST['account_edit_balance']
+        acc_edit_obj.package=request.POST['account_edit_package']
         acc_edit_obj.save()
 
         log('admin,user',f'user {acc_nmb} data edited by admin')
+        #hermes.userEdit()
         print(f'user {acc_nmb} data edited by admin')
 
-        return HttpResponseRedirect('/dashboard')
+        return redirect('adashboard')
 
 
     account_select = request.GET.get('account', None)
@@ -612,21 +719,21 @@ def account_edit(request):
 
 def profile(request):
     if not request.user.is_authenticated:
-        return redirect('/login')
+        return redirect('alogin')
     dataform={}
     status,dataform['messages'],dataform['notifications'] = MN(request.user.username)
     return render(request,'user-profile.html',dataform)
 
 def pppoe_account(request):
     if not request.user.is_authenticated:
-        return redirect('/login')
+        return redirect('alogin')
     dataform={}
     status,dataform['messages'],dataform['notifications'] = MN(request.user.username)
     return render(request,'user-profile.html',dataform )
 
 def add_user(request):
     if not request.user.is_authenticated:
-        return redirect('/login')
+        return redirect('alogin')
     
     dataform={}
     status,dataform['messages'],dataform['notifications'] = MN(request.user.username)
@@ -641,6 +748,7 @@ def add_user(request):
                 randomAcc=f'Hrp{random.randint(1000, 9999)}'
                 if not pppoe.objects.filter(acc=randomAcc).exists():
                     break
+            pk=Pkgs.objects.get(name=request.POST.get('packageSelected')).pno
 
             addUser=pppoe(acc=randomAcc, 
                             phone=request.POST.get('contact'),
@@ -650,7 +758,7 @@ def add_user(request):
                             password=request.POST.get('password'),
                             install_date=tme(),
                             name    =request.POST.get('name'),
-                            package =Pkgs.objects.get(name=request.POST.get('packageSelected')).pno,
+                            package =pk,
                             balance =0.00,
                         )
             addUser.save()
@@ -658,7 +766,9 @@ def add_user(request):
                                 contact=request.POST.get('contact'))
             addContact.save()
             log('User,Add',f'New PPPoE user {randomAcc} Added by {request.user.username}')
-            return redirect(f'/accounts/account?account={randomAcc}')
+            #hermes.addUser('pppoe',request.POST['name'],request.POST['username'],request.POST['password'],pk)
+            
+            return redirect(f'aaccountEdit?account={randomAcc}')
 
         elif upkgType == 'hotspot':
             #Automatically creating a rundom account no
@@ -666,20 +776,20 @@ def add_user(request):
                 randomAcc=f'Hrh{random.randint(1000, 9999)}'
                 if not Users.objects.filter(acc=randomAcc).exists():
                     break
-            
-
+            pk=Pkgs.objects.get(name=request.POST.get('packageSelected')).pno
             addUser=Users(acc=randomAcc, 
                             phone=request.POST.get('contact'),
                             username=request.POST.get('username'),
                             password=request.POST.get('password'),
                             install_date=tme(),
                             name    =request.POST.get('name'),
-                            package =Pkgs.objects.get(name=request.POST.get('packageSelected')).pno,
+                            package =pk,
                             balance =0.00,
                         )
             addUser.save()
             log('User,Add',f'New Hotspot user {randomAcc} Added by {request.user.username}')
-            return redirect(f'/accounts/account?account={randomAcc}')
+            #hermes.addUser('hotspot',request.POST['name'],request.POST['username'],request.POST['password'],pk)
+            return redirect(f'a/accounts/account?account={randomAcc}')
         
         else:
             print('Package type uidentified')
@@ -696,11 +806,11 @@ def add_user(request):
                 'ipPlaceholder':'10.0.0.***',
                 'pkgtype':pt}
         
-        return render(request,'user_register.html',dataform)
+        return render(request,'admin-user-register.html',dataform)
 
 def packages(request):
     if not request.user.is_authenticated:
-        return redirect('/login')
+        return redirect('alogin')
     dataform = {}
     status,dataform['messages'],dataform['notifications'] = MN(request.user.username)
     dataform['edit']=False
@@ -709,7 +819,7 @@ def packages(request):
 
     if request.method == 'POST':
         criteria=request.POST.get('formType')
-        if criteria == 'add':
+        if criteria == 'add':#Adding a package
             addPackage=Pkgs(name  = request.POST.get('Name'),     
                         speed     = request.POST.get('speed'),     
                         days      = request.POST.get('duration'),  
@@ -719,8 +829,9 @@ def packages(request):
                         )
             addPackage.save()
             log('Package,Edit',f'Npythew Package {request.POST.get("Name")} Added By {request.user.username}')
+            #hermes.addPackage()
 
-        elif criteria == 'edit':
+        elif criteria == 'edit':#editing a package
             editpkg=Pkgs.objects.get(pno=request.POST.get('packageId'))
             editpkg.name  = request.POST.get('eName')
             editpkg.speed     = request.POST.get('espeed')     
@@ -729,6 +840,7 @@ def packages(request):
             editpkg.price     = request.POST.get('eprice')  
             editpkg.save()
             log('Package,Edit',f'Package {request.POST.get("Name")} edited By {request.user.username}')
+            #hermes.editPackage()
 
     elif spef is not None:
         print('lll')
