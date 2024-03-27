@@ -61,13 +61,20 @@ BEFORE RUNNING, MAKE SURE YOU HAVE THE FOLLOWING
     datetime    ->
 
 OWNER: JOHN NJOROGE
-GITHUB: https://github.com/N-John/mikrotik__hermes_service.git \n\n
-LAST MODIFIED: 6-Feb-2024
+GITHUB: https://github.com/N-John/mikrotik_hermes.git\n\n
+LAST MODIFIED: 27-Mar-2024
     '''
 
+def RED(txt:str):
+    return '\033[91m'+str(txt)+'\033[0m'
+def GREEN(txt:str):
+    return '\033[92m'+str(txt)+'\033[0m'
+def MENU(txt:str):
+    return '\033[36m'+str(txt)+'\033[0m'
+
 def tme():
-    tt=time.ctime().strip().split(' ')
-    tme=f"[{tt[3]}-{tt[1]}-{tt[-1]} {tt[-2]}] "
+    TME=time.ctime().split(' ')
+    tme=f"[{TME[-3]}-{TME[1]}-{TME[-1]} {TME[-2]}] "
     return tme
 
 def log(dat:str):
@@ -226,11 +233,9 @@ class _hermes_service:
             ssh_client = paramiko.SSHClient()
             ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             ssh_client.connect(hostname=mk_ip, username=mk_username, password=mk_password)
-            print(f"{tme()}CONNECTED TO SERVER VIA SSH")
-            log(f"{tme()}CONNECTED TO SERVER VIA SSH TO RUN COMMANDS {cmds}")
+            print(GREEN(f"{tme()}CONNECTED TO SERVER VIA SSH"))
             
             for cmd in cmds:
-
                 print(f'Running command [{cmd}]')
                 stdin, stdout, stderr = ssh_client.exec_command(f'log warning "auto running command {cmd}"')
                 stdin, stdout, stderr = ssh_client.exec_command(cmd)
@@ -240,26 +245,88 @@ class _hermes_service:
             return output
 
         except paramiko.AuthenticationException:
-            print(f"{tme()}Authentication failed, please check your credentials.")
+            print(RED(f"{tme()}Authentication to router FAIL, please check your credentials."))
             log('ERROR CONNECTING TO SSH SERVER: AUTHENTICATION FAIL')
-            return f"Authentication failed, please check your credentials: {ssh_err}"
+            return f"Authentication FAIL, please check your credentials: {ssh_err}"
         
         except paramiko.SSHException as ssh_err:
-            print(f"{tme()}Unable to establish SSH connection: {ssh_err}")
+            print(RED(f"{tme()}Unable to establish SSH connection: {ssh_err}"))
             log(f"ERROR: Unable to establish SSH connection: {ssh_err}")
             return f"Unable to establish SSH connection: {ssh_err}"
         
         except Exception as e:
-            print(f"{tme()}An error occurred: {e}")
+            print(RED(f"{tme()}An error occurred: {e}"))
             log(f"SSH ERROR OCCURED: {e}")
             return f"An error occurred: {e}"
-
-    def session_monitor():
+        
+    def session_monitor(sm_acc=None):
         try:
+            #check if user has an active session. if so,leave.
+            #else, get money from sm_acc and create a new session
             print("RUNNING SESSION MONITOR")
-            log(f'RUNNING SESSION MONITOR')
             cx = sqlite3.connect(database)
             cu = cx.cursor()
+            print('&&')
+
+            if not sm_acc == None:#if a user is specified, check even they have an inactive session
+                #print(f'SPECIAL session monitor for {cache_account[sm_acc]["name"]}')
+                print('&&')
+                cu.execute(f'SELECT * FROM sessions WHERE acc = "{sm_acc}" AND status = "active"')
+                print('&&')
+                acc_sess=cu.fetchall()
+                print('&&')
+
+                if len(acc_sess) == 0: #if no active session create new session
+                    print(f'User {cache_account[sm_acc]["name"]} has no active session.\n Creating session...')
+                   
+                    PKGU=cache_account[sm_acc]["package"]
+                    BALU=cache_account[sm_acc]["balance"]
+                    PKG_PRICEU=cache_package[PKGU]["price"]#PRICE OF THE PACKAGE
+                    PKG_NAMEU=cache_package[PKGU]["name"]#NAME OF THE PACKAGE
+                    days_to_addU=cache_package[PKGU]["days"]#HOW MANY DAYS THE PACKAGE COVERS
+
+
+                    if BALU >= PKG_PRICEU:#if balance is enough to parchase nxt package
+                        #remove money from account
+                        cu.execute('SELECT * FROM finances ORDER BY fid desc limit 1')
+                        fid=str(len(cache_finances) + 1)
+                        cu.execute(f'insert into finances values ({fid},"{str(sm_acc)}",0.00,{str(cache_package[PKGU]["price"])},"{cache_package[PKGU]["name"]} SEBSCRIPTION RENEWAL","{str(tme())}")')
+                        log(f'insert into finances values ({fid},"{str(sm_acc)}",0.00,{str(cache_package[PKGU]["price"])},"{cache_package[PKGU]["name"]} SEBSCRIPTION RENEWAL","{str(tme())}")')
+                        _cache_update()
+                        BALU=BALU-PKG_PRICEU
+                        cu.execute(f'UPDATE account set balance = {str(BALU)} WHERE acc = "{sm_acc}"')
+                        log(f'UPDATE account set balance = {str(BALU)} WHERE acc = "{sm_acc}"')
+                        print(f'{sm_acc} Balance updated to {BALU}')
+
+                        #create next session
+                        TME=time.ctime().split(' ')
+                        S_DATE=f'{TME[-3]}-{TME[1]}-{TME[-1]}'
+                        S_TIME = datetime.strptime(TME[-2], "%H:%M:%S").strftime("%I:%M %p")
+                        E_DATE = (datetime.strptime(S_DATE, "%d-%b-%Y") + timedelta(days=days_to_addU)).strftime("%d-%b-%Y")
+                        
+                        log('SELECT * FROM sessions ORDER BY sid desc limit 1')
+                        sid=str(len(cache_sessions) + 1)
+                        cu.execute(f'INSERT INTO sessions VALUES({sid},"{sm_acc}","{PKG_NAMEU}","{S_DATE}","{S_TIME}","{E_DATE}","{S_TIME}","active","{str(tme())}")')
+                        log(f'INSERT INTO sessions VALUES({sid},"{sm_acc}","{PKG_NAMEU}","{S_DATE}","{S_TIME}","{E_DATE}","{S_TIME}","active","{str(tme())}")')  
+                        cx.commit()
+                        print(GREEN(f'{tme()}New LOCAL session is created for {cache_account[sm_acc]["name"]} with the following values. ({sid},package : "{PKG_NAMEU}",start date : "{S_DATE}",start time : "{S_TIME}",end date : "{E_DATE}", end time : "{S_TIME}","active")'))
+
+                        if cache_package[cache_account[sm_acc]["package"]]["type"] == 'pppoe':
+                            print(MENU(f'CREATING NEW REMOTE PPPoE SESSION FOR {cache_account[sm_acc]["name"]}'))
+                            cmd=[f'ppp secret set "{cache_account[sm_acc]["username"]}" disabled=no']
+                            _hermes_service.ssh_command(cmd)
+                        elif cache_package[cache_account[sm_acc]["package"]]["type"] == 'hotspot':
+                            print(MENU(f'CREATING NEW REMOTE HOTSPOT SESSION FOR {cache_account[sm_acc]["name"]}'))
+                            cmd=[f'ip hotspot user set "{cache_account[sm_acc]["username"]}" limit-uptime=0']
+                            _hermes_service.ssh_command(cmd)      
+
+                    else:
+                        print(f'USER {cache_account[sm_acc]["name"]} ACCOUNT BALANCE IS STILL INSUFFICIENT. NO SESSION CREATED') 
+
+                else:
+                    print(f'USER {cache_account[sm_acc]["name"]} ALREADY HAS AN ACTIVE SESSION.')           
+
+
             cu.execute('SELECT * FROM sessions WHERE status = "active"')           
             active_sess=cu.fetchall()
 
@@ -271,8 +338,7 @@ class _hermes_service:
                 if combined_datetime <= datetime.now():
                     #(1) SET THE SESSION TO EXIRED
                     acc_no=dat[1]
-                    print(f"SESSION EXPIRED FOR {account_nme[acc_no]}[{acc_no}]")
-                    log(f"SESSION EXPIRED FOR {account_nme[acc_no]}[{acc_no}].")
+                    print(f"SESSION EXPIRED FOR {cache_account[acc_no]['name']}[{acc_no}]")
                     cu.execute(f'UPDATE sessions SET status = "expired" WHERE acc = "{acc_no}"')
                     log(f'UPDATE sessions SET status = "expired" WHERE acc = "{acc_no}"')
 
@@ -289,12 +355,12 @@ class _hermes_service:
 
                     if BAL >= PKG_PRICE:#if balance is enough to parchase nxt package
                         #remove money from account
-                        log(f'CREATING NEW SESSION FOR {account_nme[acc_no]}[{acc_no}].')
                         
                         cu.execute('SELECT * FROM finances ORDER BY fid desc limit 1')
-                        fid=str(int(cu.fetchone()[0]) + 1)
+                        fid=str(len(cache_finances) + 1)
                         cu.execute(f'insert into finances values ({str(fid)},"{str(acc_no)}",0.00,{str(PKG_PRICE)},"SEBSCRIPTION RENEWAL","{str(tme())}")')
                         log(f'insert into finances values ({str(fid)},"{str(acc_no)}",0.00,{str(PKG_PRICE)},"SEBSCRIPTION RENEWAL","{str(tme())}")')
+                        _cache_update()
                         BAL=BAL-PKG_PRICE
                         cu.execute(f'UPDATE account set balance = {str(BAL)} WHERE acc = "{acc_no}"')
                         log(f'UPDATE account set balance = {str(BAL)} WHERE acc = "{acc_no}"')
@@ -305,30 +371,29 @@ class _hermes_service:
                         S_TIME = datetime.strptime(TME[-2], "%H:%M:%S").strftime("%I:%M %p")
                         E_DATE = (datetime.strptime(S_DATE, "%d-%b-%Y") + timedelta(days=days_to_add)).strftime("%d-%b-%Y")
                         cu.execute('SELECT * FROM sessions ORDER BY sid desc limit 1')
-                        sid=str(int(cu.fetchone()[0]) + 1)
+                        log('SELECT * FROM sessions ORDER BY sid desc limit 1')
+                        sid=str(len(cache_sessions) + 1)
                         cu.execute(f'INSERT INTO sessions VALUES({sid},"{acc_no}","{PKG_NAME}","{S_DATE}","{S_TIME}","{E_DATE}","{S_TIME}","active","{str(tme())}")')
-                        print(f'{tme()} NEW LOCAL SESSION CREATED FOR {account_nme[acc_no]} WITH VALUES ({sid},package : "{PKG_NAME}",start date : "{S_DATE}",start time : "{S_TIME}",end date : "{E_DATE}",end time : "{S_TIME}","active","{str(tme())}")')
+                        log(f'INSERT INTO sessions VALUES({sid},"{acc_no}","{PKG_NAME}","{S_DATE}","{S_TIME}","{E_DATE}","{S_TIME}","active","{str(tme())}")')
+                        print(GREEN(f'{tme()} NEW LOCAL SESSION CREATED FOR {cache_account[acc_no]["name"]} WITH VALUES ({sid},package : "{PKG_NAME}",start date : "{S_DATE}",start time : "{S_TIME}",end date : "{E_DATE}",end time : "{S_TIME}","active","{str(tme())}")'))
 
                         #enable user on server
                         cu.execute(f'SELECT username FROM account where acc = "{acc_no}"')
                         un=cu.fetchall()[0][0]
 
                         if cache_package[cache_account[acc_no]["package"]]["type"] == 'pppoe':
-                            print((f'CREATING NEW REMOTE PPPoE SESSION FOR {account_nme[acc_no]}'))
+                            print(MENU(f'CREATING NEW REMOTE PPPoE SESSION FOR {cache_account[acc_no]["name"]}'))
                             cmd=[f'ppp secret set "{cache_account[acc_no]["username"]}" disabled=no']
                             _hermes_service.ssh_command(cmd)
-                            log((f'CREATED NEW REMOTE PPPoE SESSION FOR {account_nme[acc_no]}'))
-
                         elif cache_package[cache_account[acc_no]["package"]]["type"] == 'hotspot':
-                            print((f'CREATING NEW REMOTE HOTSPOT SESSION FOR {account_nme[acc_no]}'))
+                            print(MENU(f'CREATING NEW REMOTE HOTSPOT SESSION FOR {cache_account[acc_no]["name"]}'))
                             cmd=[f'ip hotspot user set "{cache_account[acc_no]["username"]}" limit-uptime=0']
                             _hermes_service.ssh_command(cmd)
-                            log((f'CREATED NEW REMOTE HOTSPOT SESSION FOR {account_nme[acc_no]}'))
                    
 
                     else:
                         #disable user session
-                        print(f'{tme()} USER {account_nme[acc_no]} DISCONTINUED FROM CONNECTION')
+                        print(f'{tme()} USER {cache_account[acc_no]["name"]} DISCONTINUED FROM CONNECTION')
                         un=cache_account[acc_no]["username"]
                         if cache_package[cache_account[acc_no]["package"]]["type"] == 'pppoe':
                             cmd=[f'ppp secret set "{un}" disabled=yes',f'ppp active remove [find name="{un}"]']
@@ -336,21 +401,17 @@ class _hermes_service:
                         elif cache_package[cache_account[acc_no]["package"]]["type"] == 'hotspot':
                             cmd=[f'ip hotspot user set "{un}" limit-uptime=1s',f'ip hotspot active remove [find name="{un}"]']
                             _hermes_service.ssh_command(cmd)
-                        log(f'{tme()} USER {account_nme[acc_no]} DISCONTINUED FROM CONNECTION')
-                            
 
             cx.commit()
             cx.close()
             print('SESSION MONITOR COMPLETED')
-
-            return 1
             
         except Exception as e:
             cx.close()
-            print((f'FAILED SESSION MONITOR: {str(e)}'))
-            log(f'FAILED SESSION MONITOR: {str(e)}')
+            print(RED(f'FAIL SESSION MONITOR: {str(e)}'))
+            log(f'FAIL SESSION MONITOR: {str(e)}')
             return 0
-    
+
     def startup():#what to do when the program first runs
         try:
             #print('\033c', end='')
@@ -412,6 +473,27 @@ class _hermes_service:
             print((f'{tme()}FAILED RUNNING STARTUP. ERROR: {str(e)}'))
             log(f'FAILED RUNNING STARTUP. ERROR: {str(e)}')
             return 0
+        
+    def modWatch():#watch is the file gets modified
+        try:
+            oldModTime = os.path.getmtime(database)
+            c=0
+            while 1:
+                time.sleep(3)
+                newModTime=os.path.getmtime(database)
+                #print()
+                #print(f'Check number [{c}]. file size: {newModTime}')
+                if oldModTime != newModTime:
+                    #print(MENU('Database file Modified'))
+                    log('Database file Modified')
+                    break
+                c+=1
+            _hermes_service.startup()
+
+        except Exception as e:
+            print (f'modWatch ERROR: {str(e)}')
+            log(f'modWatch ERROR: {str(e)}')
+            return 0
     
     def run():
         try:
@@ -454,6 +536,7 @@ class _hermes_service:
             else:
                 print((f'{tme()}NO SCHEDULED DISCONNECTION. EXITING.....'))
                 log(f'NO SCHEDULED DISCONNECTION. EXITING.....')
+                _hermes_service.modWatch()
                 
             return 1
 
