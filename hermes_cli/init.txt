@@ -62,7 +62,7 @@ CREATE TABLE "sessions" (
 	PRIMARY KEY("sid")
 );
 
-CREATE TABLE "pppoe_account" (
+CREATE TABLE "PppoeAccounts" (
 	"acc"	TEXT NOT NULL UNIQUE,
 	"name"	TEXT NOT NULL,
 	"phone"	TEXT NOT NULL,

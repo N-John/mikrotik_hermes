@@ -65,7 +65,7 @@ BEFORE RUNNING, MAKE SURE YOU HAVE THE FOLLOWING
 
 OWNER: JOHN NJOROGE
 GITHUB: https://github.com/N-John/mikrotik_hermes.git \n\n
-LAST MODIFIED: 27-Mar-2024
+LAST MODIFIED: 24-July-2024
     '''
 
 
@@ -194,7 +194,7 @@ def cache():
                                 }
         print('#'*10,end='')
         #pppoe acccount cache
-        cu.execute('SELECT * FROM pppoe_account')
+        cu.execute('SELECT * FROM PppoeAccounts')
         OUTPT=cu.fetchall()
         for data in OUTPT:
             cache_pppoe[data[0]]={"name"        :data[1],
@@ -704,8 +704,8 @@ class hermes:
             elif acc_type == 'pppoe':
                 balance=cache_pppoe[acc]['balance'] + int(amount)
                 print(f'NEW PPPoE BALANCE {balance}')
-                cu.execute(f'UPDATE pppoe_account set balance = {str(balance)} WHERE acc = "{acc}";')
-                log(f'UPDATE pppoe_account set balance = {str(balance)} WHERE acc = "{acc}";')
+                cu.execute(f'UPDATE PppoeAccounts set balance = {str(balance)} WHERE acc = "{acc}";')
+                log(f'UPDATE PppoeAccounts set balance = {str(balance)} WHERE acc = "{acc}";')
 
             #print(f'NEW BALANCE {balance}')
             #cu.execute(f'UPDATE account set balance = {str(balance)} WHERE acc = "{acc}";')
@@ -966,7 +966,7 @@ class hermes:
             elif pkg_type == 'pppoe':
                 location=input('Input location: ').strip()
                 ip=input('Input remote ip: ').strip().strip()
-                cu.execute(f'INSERT INTO pppoe_account values("{acc}","{name}","{phne}","{location}","{ip}","{usernm}","{pswrd}","{inst_date}",{pkg},0)')
+                cu.execute(f'INSERT INTO PppoeAccounts values("{acc}","{name}","{phne}","{location}","{ip}","{usernm}","{pswrd}","{inst_date}",{pkg},0)')
                 cid=len(cache_contacts)+1
                 cu.execute(f'INSERT INTO contacts values({cid},"{acc}","{phne}")')
                 cmd.append(f'ppp secret add comment="{name}" name="{usernm}" password="{pswrd}" profile="{pkg_name}"  service=pppoe ')
